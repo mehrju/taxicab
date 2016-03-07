@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Taxi cab</string>
+    <string name="email_address">Email address</string>
+    <string name="password">Password</string>
+    <string name="signin">Sign In</string>
+    <string name="signup">Sign Up</string>
+    <string name="email_invalid">Invalid email, please check the email address</string>
+    <string name="login_fail">Invalid user name or password. Please try again</string>
+    <string name="no_network_title">No network!</string>
+    <string name="no_network_msg">You are not connected to internet. Please connect to internet and try again</string>
+    <string name="text_ok">OK</string>
+</resources>
