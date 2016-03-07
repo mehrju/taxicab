@@ -29,6 +29,8 @@
 * [x] User is allowed to rate the driver
 * [x] Driver is allowed to rate user 
 
+Link to Trello agile dashboard: <a href="https://trello.com/b/eeiqsYbE/taxicab">here</a>
+
 Wireframes: <a href="add wireframe here">here</a>.
 
 *Walkthrough of all user stories:*
