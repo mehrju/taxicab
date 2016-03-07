@@ -1,5 +1,6 @@
 package xc0ffee.taxicab.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +45,18 @@ public class SignInActivity extends AppCompatActivity {
                 onSignInBtnClicked();
             }
         });
+
+        mBtnSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSignUpBtnClicked();
+            }
+        });
+    }
+
+    private void onSignUpBtnClicked() {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     private void onSignInBtnClicked() {

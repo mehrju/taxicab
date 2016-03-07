@@ -3,7 +3,7 @@
     package="xc0ffee.taxicab">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".activities.TaxiCabApplication"
@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SignInActivity"></activity>
+        <activity android:name=".activities.SignInActivity" />
+        <activity android:name=".activities.SignUpActivity"></activity>
     </application>
 
 </manifest>

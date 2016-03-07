@@ -9,4 +9,10 @@
     <string name="no_network_title">No network!</string>
     <string name="no_network_msg">You are not connected to internet. Please connect to internet and try again</string>
     <string name="text_ok">OK</string>
+    <string name="name">Your name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register">Register</string>
+    <string name="required_fields">All fields are required</string>
+    <string name="passwd_mismatch">Passwords do not match</string>
 </resources>
