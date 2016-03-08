@@ -31,7 +31,7 @@
 
 Link to Trello agile dashboard: <a href="https://trello.com/b/eeiqsYbE/taxicab">here</a>
 
-Wireframes: <a href="add wireframe here">here</a>.
+Wireframes: <a href="https://popapp.in/w/projects/56db318a183b508d3ab23dcc/preview/56dd3e99027b5403541f2a89">here</a>.
 
 *Walkthrough of all user stories:*
 
