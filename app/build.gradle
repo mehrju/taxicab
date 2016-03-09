@@ -29,4 +29,5 @@ dependencies {
     compile 'com.parse:parseinterceptors:0.0.2'
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.2.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.scottyab:secure-preferences-lib:0.1.4'
 }

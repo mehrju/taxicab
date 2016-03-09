@@ -10,13 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xc0ffee.taxicab.R;
+import xc0ffee.taxicab.network.AccountManager;
 import xc0ffee.taxicab.utilities.Utils;
 
 public class SignInActivity extends AppCompatActivity {
@@ -73,16 +70,18 @@ public class SignInActivity extends AppCompatActivity {
 
     private void login(String name, String password) {
         setLoading(true);
-        ParseUser.logInInBackground(name, password, new LogInCallback() {
+        TaxiCabApplication.getAccountManager().loginUser(name, password, new AccountManager.LoginStatusCallback() {
             @Override
-            public void done(ParseUser user, ParseException e) {
+            public void onLoginSuccess() {
                 setLoading(false);
-                if (e == null) {
-                    Log.d(TAG, "User logged in");
-                } else {
-                    Log.d(TAG, "Failed to login user");
-                    Toast.makeText(SignInActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
-                }
+                Log.d(TAG, "User logged in");
+            }
+
+            @Override
+            public void onLoginFailed() {
+                setLoading(false);
+                Log.d(TAG, "Failed to login user");
+                Toast.makeText(SignInActivity.this, R.string.login_fail, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -93,5 +92,8 @@ public class SignInActivity extends AppCompatActivity {
         } else {
             mPbLoading.setVisibility(View.GONE);
         }
+    }
+
+    private void handleLoginSuccessfull(String name, String passwd) {
     }
 }

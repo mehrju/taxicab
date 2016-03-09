@@ -49,8 +49,8 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void onSignUpClicked() {
-        String email = String.valueOf(mEmailAdd.getText());
-        String password = String.valueOf(mPasswd.getText());
+        final String email = String.valueOf(mEmailAdd.getText());
+        final String password = String.valueOf(mPasswd.getText());
         String confirmPassword = String.valueOf(mConfPasswd.getText());
         String name = String.valueOf(mUsername.getText());
         String phNumber = String.valueOf(mPhoneNumber.getText());
@@ -90,10 +90,12 @@ public class SignUpActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 setLoading(false);
                 if (e == null) {
-                    Log.d(TAG, "User signed up!");
+                    TaxiCabApplication.getAccountManager().storeCredentials(email, password);
+                    signUpSuccess();
                 } else {
                     Log.d(TAG, "Failed to sign up user");
                     Toast.makeText(SignUpActivity.this, "Unable to sign up user", Toast.LENGTH_SHORT).show();
+                    signUpFailed();
                 }
             }
         });
@@ -105,5 +107,13 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             mPbLoading.setVisibility(View.GONE);
         }
+    }
+
+    private void signUpSuccess() {
+        Log.d(TAG, "User signed up!");
+    }
+
+    private void signUpFailed() {
+
     }
 }

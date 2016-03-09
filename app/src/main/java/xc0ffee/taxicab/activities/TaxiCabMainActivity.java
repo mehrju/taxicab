@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import xc0ffee.taxicab.R;
+import xc0ffee.taxicab.network.AccountManager;
 import xc0ffee.taxicab.utilities.NetworkUtils;
 
 public class TaxiCabMainActivity extends AppCompatActivity {
@@ -53,12 +54,25 @@ public class TaxiCabMainActivity extends AppCompatActivity {
     private class DetermineLoginStatus extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... params) {
-            return TaxiCabApplication.getAccountManager().hasUserLoggedIn();
+            return TaxiCabApplication.getAccountManager().isCredentialsStored();
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                TaxiCabApplication.getAccountManager().autoLoginUser(
+                        new AccountManager.LoginStatusCallback() {
+                            @Override
+                            public void onLoginSuccess() {
+                                loggedIn();
+                            }
+
+                            @Override
+                            public void onLoginFailed() {
+                                loginFailed();
+                            }
+                        }
+                );
             } else {
                 showLoginActivity();
             }
@@ -87,5 +101,13 @@ public class TaxiCabMainActivity extends AppCompatActivity {
                 showNoNetworkMessage();
             }
         }
+    }
+
+    private void loggedIn() {
+        // Launch map activity here
+    }
+
+    private void loginFailed() {
+        showLoginActivity();
     }
  }

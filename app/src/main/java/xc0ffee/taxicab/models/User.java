@@ -30,7 +30,7 @@ public class User extends ParseUser {
     }
 
     public String getEmail() {
-        return getEmail();
+        return getUsername();
     }
 
     public String getRole() {
