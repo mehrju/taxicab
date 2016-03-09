@@ -66,12 +66,21 @@ public class AccountManager {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e == null) {
-                    storeCredentials(userName, passWd);
-                    callback.onLoginSuccess();
+                    if (!user.get("role").equals("user")) {
+                        callback.onLoginFailed();
+                    } else {
+                        storeCredentials(userName, passWd);
+                        callback.onLoginSuccess();
+                    }
                 } else {
                     callback.onLoginFailed();
                 }
             }
         });
+    }
+
+    public void logoutUser() {
+        ParseUser.logOut();
+        storeCredentials("","");
     }
 }

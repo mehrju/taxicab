@@ -75,6 +75,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onLoginSuccess() {
                 setLoading(false);
                 Log.d(TAG, "User logged in");
+                signInSuccess();
             }
 
             @Override
@@ -94,6 +95,9 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-    private void handleLoginSuccessfull(String name, String passwd) {
+    private void signInSuccess() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

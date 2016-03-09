@@ -76,7 +76,6 @@ public class TaxiCabMainActivity extends AppCompatActivity {
             } else {
                 showLoginActivity();
             }
-            finish();
         }
     }
 
@@ -105,9 +104,13 @@ public class TaxiCabMainActivity extends AppCompatActivity {
 
     private void loggedIn() {
         // Launch map activity here
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void loginFailed() {
         showLoginActivity();
+        finish();
     }
  }
