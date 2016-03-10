@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.activities;
+package com.xc0ffeelabs.taxicab.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.xc0ffeelabs.taxicab.network.AccountManager;
+import com.xc0ffeelabs.taxicab.utilities.NetworkUtils;
+
 import xc0ffee.taxicab.R;
-import xc0ffee.taxicab.network.AccountManager;
-import xc0ffee.taxicab.utilities.NetworkUtils;
 
 public class TaxiCabMainActivity extends AppCompatActivity {
 

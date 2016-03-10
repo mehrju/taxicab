@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.models;
+package com.xc0ffeelabs.taxicab.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseUser;

@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.activities;
+package com.xc0ffeelabs.taxicab.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;

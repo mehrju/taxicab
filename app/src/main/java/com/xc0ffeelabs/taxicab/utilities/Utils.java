@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.utilities;
+package com.xc0ffeelabs.taxicab.utilities;
 
 public class Utils {
     public static boolean isValidEmail(CharSequence target) {

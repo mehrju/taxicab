@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.utilities;
+package com.xc0ffeelabs.taxicab.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

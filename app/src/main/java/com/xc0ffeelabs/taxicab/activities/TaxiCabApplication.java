@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.activities;
+package com.xc0ffeelabs.taxicab.activities;
 
 import android.app.Application;
 
@@ -6,9 +6,8 @@ import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
 import com.securepreferences.SecurePreferences;
-
-import xc0ffee.taxicab.models.User;
-import xc0ffee.taxicab.network.AccountManager;
+import com.xc0ffeelabs.taxicab.models.User;
+import com.xc0ffeelabs.taxicab.network.AccountManager;
 
 public class TaxiCabApplication extends Application {
 

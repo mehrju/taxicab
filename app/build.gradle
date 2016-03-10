@@ -28,6 +28,8 @@ dependencies {
     compile 'com.parse:parse-android:1.13.0'
     compile 'com.parse:parseinterceptors:0.0.2'
     compile 'com.github.castorflex.smoothprogressbar:library-circular:1.2.0'
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+    compile 'com.google.android.gms:play-services-location:8.4.0'
 }

@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.activities;
+package com.xc0ffeelabs.taxicab.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.xc0ffeelabs.taxicab.network.AccountManager;
+import com.xc0ffeelabs.taxicab.utilities.Utils;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import xc0ffee.taxicab.R;
-import xc0ffee.taxicab.network.AccountManager;
-import xc0ffee.taxicab.utilities.Utils;
 
 public class SignInActivity extends AppCompatActivity {
 

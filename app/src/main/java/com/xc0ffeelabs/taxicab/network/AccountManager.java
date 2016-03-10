@@ -1,4 +1,4 @@
-package xc0ffee.taxicab.network;
+package com.xc0ffeelabs.taxicab.network;
 
 import android.text.TextUtils;
 
@@ -6,8 +6,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.securepreferences.SecurePreferences;
-
-import xc0ffee.taxicab.activities.TaxiCabApplication;
+import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 
 public class AccountManager {
 
