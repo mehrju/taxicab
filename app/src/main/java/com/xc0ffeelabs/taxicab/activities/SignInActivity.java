@@ -10,12 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xc0ffee.taxicab.R;
 
 public class SignInActivity extends AppCompatActivity {
 

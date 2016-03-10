@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.NetworkUtils;
 
-import xc0ffee.taxicab.R;
 
 public class TaxiCabMainActivity extends AppCompatActivity {
 

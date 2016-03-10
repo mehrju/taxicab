@@ -12,12 +12,12 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.SignUpCallback;
+import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.utilities.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xc0ffee.taxicab.R;
 
 public class SignUpActivity extends AppCompatActivity {
 

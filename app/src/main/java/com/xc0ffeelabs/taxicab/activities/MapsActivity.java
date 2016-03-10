@@ -11,9 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.xc0ffeelabs.taxicab.R;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import xc0ffee.taxicab.R;
 
 public class MapsActivity extends AppCompatActivity {
 
