@@ -30,11 +30,22 @@
 * [x] Driver is allowed to rate user 
 
 Link to Trello agile dashboard: <a href="https://trello.com/b/eeiqsYbE/taxicab">here</a>
+We are using free version of Trello for project management which doesn't allow to share the board publicly. Please use <a href="https://trello.com/invite/taxicabteam/4623523c13fed5d9b05fd845c8026f0f">this link</a> to add yourself as a member to our Trello group and view our progress.
 
 Wireframes: <a href="https://popapp.in/w/projects/56db318a183b508d3ab23dcc/preview/56dd3e99027b5403541f2a89">here</a>.
+
+Taxi cab driver side app is hosted in <a href="https://github.com/xc0ffeelabs/taxicab-driver">this github</a>.
 
 *Walkthrough of all user stories:*
 
 ![Video Walkthrough](demo.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+Sprint 1 progress:
+-----------------
+* [x] Completed setting up parse
+* [x] Completed creating user model
+* [x] Completed creating driver model
+* [x] Completed sign in flow for user and driver
+* [x] Completed sign up flow for user and driver
