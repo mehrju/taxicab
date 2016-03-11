@@ -7,7 +7,8 @@
 * [x] User can login to his account
 * [x] Driver can create account/register with Taxi Cab service
 * [x] Drive can login to his account
-* [x] User is presented with a map view that lists all nearby drivers.
+* [x] User once logged in is presented with a Map view.
+* [ ] User can see nearby drivers
 * [ ] User can book a Taxi
 * [ ] Once booked, user will be shown with the position of approaching driver
 * [ ] Once driver picks up the customer, user app will show customers current position on the map as they approach to their destination
