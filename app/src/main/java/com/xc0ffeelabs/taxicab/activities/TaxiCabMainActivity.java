@@ -1,9 +1,13 @@
 package com.xc0ffeelabs.taxicab.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,19 +15,46 @@ import android.support.v7.app.AppCompatActivity;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.NetworkUtils;
+import com.xc0ffeelabs.taxicab.utilities.Utils;
 
 public class TaxiCabMainActivity extends AppCompatActivity {
+
+    private static final int NO_PERM_ACTIVITY_LAUNCH_CODE = 100;
+
+    private boolean mIsInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_taxi_cab_main);
+        if (Utils.isM()) {
+            int permissionCheck = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, NoPermissionActivity.class);
+                startActivity(intent);
+            } else {
+                initialize();
+            }
+        } else {
+            initialize();
+        }
     }
 
+    private void initialize() {
+        mIsInitialized = true;
+        new CheckOnlineStatus(this).execute();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
-        new CheckOnlineStatus(this).execute();
+        if (Utils.isM() && !mIsInitialized) {
+            int permissionCheck = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                initialize();
+            }
+        }
     }
 
     private void showLoginActivity() {
@@ -113,4 +144,15 @@ public class TaxiCabMainActivity extends AppCompatActivity {
         showLoginActivity();
         finish();
     }
- }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NO_PERM_ACTIVITY_LAUNCH_CODE) {
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            } else {
+                new CheckOnlineStatus(this).execute();
+            }
+        }
+    }
+}
