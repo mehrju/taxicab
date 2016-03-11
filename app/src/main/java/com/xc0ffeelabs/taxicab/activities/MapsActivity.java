@@ -10,7 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.xc0ffeelabs.taxicab.R;
 
 import butterknife.Bind;
@@ -23,6 +27,8 @@ public class MapsActivity extends AppCompatActivity {
     @Bind(R.id.dl_nav_drawer) DrawerLayout mDrawer;
 
     private ActionBarDrawerToggle mDrawerToggle;
+    private GoogleMap mMap;
+    private SupportMapFragment mMapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +37,13 @@ public class MapsActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+
         setSupportActionBar(mToolbar);
 
         setupNavDrawer();
+
+        setupMap();
     }
 
     private void setupNavDrawer() {
@@ -47,7 +57,6 @@ public class MapsActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawer, mToolbar, R.string.drawer_open, R.string.drawer_close);
         mDrawer.addDrawerListener(mDrawerToggle);
-
     }
 
     private void selectDrawerItem(MenuItem item) {
@@ -99,6 +108,32 @@ public class MapsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void setupMap() {
+        if (mMapFragment != null) {
+            mMapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    loadMap(googleMap);
+                }
+            });
+        } else {
+            Toast.makeText(this, "Error: map fragment is null", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadMap(GoogleMap googleMap) {
+        mMap = googleMap;
+        if (mMap == null) {
+            Toast.makeText(this, "Map failed to load!", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            getCurrentLocation();
+        }
+    }
+
+    private void getCurrentLocation() {
     }
 
 }

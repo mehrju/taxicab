@@ -12,7 +12,6 @@ import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.NetworkUtils;
 
-
 public class TaxiCabMainActivity extends AppCompatActivity {
 
     @Override

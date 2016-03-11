@@ -21,13 +21,12 @@
             android:background="?attr/colorPrimary">
         </android.support.v7.widget.Toolbar>
 
-
-        <RelativeLayout
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="xc0ffee.taxicab.activities.MapsActivity">
+            android:layout_height="match_parent"/>
 
-        </RelativeLayout>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
