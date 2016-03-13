@@ -8,6 +8,7 @@ import com.parse.interceptors.ParseLogInterceptor;
 import com.securepreferences.SecurePreferences;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
+import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
 
 public class TaxiCabApplication extends Application {
 
@@ -31,6 +32,10 @@ public class TaxiCabApplication extends Application {
 
     public static AccountManager getAccountManager() {
         return AccountManager.getInstance();
+    }
+
+    public static NearbyDrivers getNearbyDrivers() {
+        return NearbyDrivers.get();
     }
 
     private void initializeParse() {

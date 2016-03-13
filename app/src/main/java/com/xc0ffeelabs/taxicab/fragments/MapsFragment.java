@@ -22,17 +22,31 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.xc0ffeelabs.taxicab.R;
+import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
+import com.xc0ffeelabs.taxicab.models.User;
+import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MapsFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 1;
+    private final static int REFRESH_INTERVAL = 10;
 
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
+
+    private Map<String, Marker> mMarkerMap = new HashMap<>();
 
     public MapsFragment() {
     }
@@ -146,6 +160,7 @@ public class MapsFragment extends Fragment implements
     @Override
     public void onStop() {
         disconnectClient();
+        TaxiCabApplication.getNearbyDrivers().stopQueryDriverLocationUpdates();
         super.onStop();
     }
 
@@ -155,9 +170,10 @@ public class MapsFragment extends Fragment implements
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
                 mMap.animateCamera(cameraUpdate);
                 startLocationUpdates();
+                fetchNearByDrivers();
             } else {
                 Toast.makeText(getContext(), "Cound't retrieve current location. Please enable GPS location",
                         Toast.LENGTH_SHORT).show();
@@ -167,9 +183,52 @@ public class MapsFragment extends Fragment implements
         }
     }
 
-    private void startLocationUpdates() {
+    private void fetchNearByDrivers() {
+        NearbyDrivers nearbyDrivers = TaxiCabApplication.getNearbyDrivers();
+        nearbyDrivers.setLocation(new LatLng(37.402721, -122.049888));
+        nearbyDrivers.setRadius(10);
+        nearbyDrivers.setRefreshInterval(REFRESH_INTERVAL);
+        nearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
+            @Override
+            public void onDriverLocationUpdate(List<User> users) {
+                if (users.size() <= 0) {
+                    Toast.makeText(getContext(), "No nearby drivers found", Toast.LENGTH_SHORT).show();
+                } else {
+                    addDriverMarkers(users);
+                }
+            }
+
+            @Override
+            public void onFailed() {
+                Toast.makeText(getContext(), "Failed to get nearby drivers", Toast.LENGTH_SHORT).show();
+            }
+        });
+        nearbyDrivers.startQueryDriverLocationUpdates();
     }
 
+    private void addDriverMarkers(List<User> drivers) {
+        Set<String> mCurrentDrivers = new HashSet<>(mMarkerMap.keySet());
+        for (User driver : drivers) {
+            LatLng position = new LatLng(driver.getLocation().getLatitude(), driver.getLocation().getLongitude());
+            if (!mMarkerMap.containsKey(driver.getObjectId())) {
+                MarkerOptions markerOptions = new MarkerOptions().position(position).title(driver.getName());
+                Marker marker = mMap.addMarker(markerOptions);
+                mMarkerMap.put(driver.getObjectId(), marker);
+            } else {
+                Marker marker = mMarkerMap.get(driver.getObjectId());
+                marker.setPosition(position);
+            }
+            mCurrentDrivers.remove(driver.getObjectId());
+        }
+        for (String id: mCurrentDrivers) {
+            Marker marker = mMarkerMap.get(id);
+            marker.remove();
+            mMarkerMap.remove(id);
+        }
+    }
+
+    private void startLocationUpdates() {
+    }
 
     @Override
     public void onConnectionSuspended(int i) {

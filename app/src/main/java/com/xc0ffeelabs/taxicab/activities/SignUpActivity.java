@@ -83,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity {
         user.setUsername(email);
         user.setPassword(password);
         user.setName(name);
-        user.setRole();
+        user.setRole(User.USER_ROLE);
         user.setPhone(phoneNumber);
         setLoading(true);
         user.signUpInBackground(new SignUpCallback() {
