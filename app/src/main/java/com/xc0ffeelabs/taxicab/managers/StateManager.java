@@ -2,6 +2,7 @@ package com.xc0ffeelabs.taxicab.managers;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
+import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 
 public class StateManager implements MapsFragment.MapReady {
@@ -21,6 +22,7 @@ public class StateManager implements MapsFragment.MapReady {
     private GoogleApiClient mClient = null;
     private State mCurrentState = null;
     private boolean mStartWhenReadyState = false;
+    private MapsActivity mAcitivity;
 
     public static StateManager getInstance() {
         if (ourInstance == null) {
@@ -32,12 +34,16 @@ public class StateManager implements MapsFragment.MapReady {
     private StateManager() {
     }
 
+    public void setActivity(MapsActivity activity) {
+        mAcitivity = activity;
+    }
+
     @Override
     public void onMapReady(GoogleMap map, GoogleApiClient apiClient) {
         mMap = map;
         mClient = apiClient;
         if (mStartWhenReadyState) {
-            mCurrentState.enterState(map, apiClient);
+            mCurrentState.enterState(mAcitivity, map, apiClient);
             mStartWhenReadyState = false;
         }
     }
@@ -53,7 +59,7 @@ public class StateManager implements MapsFragment.MapReady {
                 if (mMap == null) {
                     mStartWhenReadyState = true;
                 } else {
-                    mCurrentState.enterState(mMap, mClient);
+                    mCurrentState.enterState(mAcitivity, mMap, mClient);
                 }
                 break;
             default:

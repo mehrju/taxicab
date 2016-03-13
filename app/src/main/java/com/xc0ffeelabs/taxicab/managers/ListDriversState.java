@@ -2,7 +2,7 @@ package com.xc0ffeelabs.taxicab.managers;
 
 import android.content.Context;
 import android.location.Location;
-import android.util.Log;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -13,7 +13,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.xc0ffeelabs.taxicab.R;
+import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
+import com.xc0ffeelabs.taxicab.fragments.ControlsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
 import com.xc0ffeelabs.taxicab.network.TravelTime;
@@ -34,19 +37,26 @@ public class ListDriversState implements State {
     private Context mContext;
     private List<User> mSortedUsers;
     private LatLng mUserLocation;
+    private MapsActivity mActivity;
 
     public ListDriversState() {
         mContext = TaxiCabApplication.get().getAppContext();
     }
 
     @Override
-    public void enterState(GoogleMap map, GoogleApiClient client) {
+    public void enterState(MapsActivity activity, GoogleMap map, GoogleApiClient client) {
+        mActivity = activity;
         mMap = map;
         mApiClient = client;
         initialize();
     }
 
     private void initialize() {
+
+        FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fm_controls, ControlsFragment.newInstance(), "controls");
+        ft.commit();
+
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
@@ -100,7 +110,9 @@ public class ListDriversState implements State {
     }
 
     private void displayAproximateTime() {
-        Log.d("NAYAN", "Appr time = " + mSortedUsers.get(0).getTravelTimeText());
+        if (mSortedUsers != null && !mSortedUsers.isEmpty()) {
+            ControlsFragment.newInstance().setApprTime(mSortedUsers.get(0).getTravelTimeText());
+        }
     }
 
     private void addDriverMarkers(List<User> drivers) {

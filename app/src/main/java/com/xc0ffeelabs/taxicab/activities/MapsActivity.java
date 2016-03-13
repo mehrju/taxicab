@@ -38,6 +38,8 @@ public class MapsActivity extends AppCompatActivity {
 
         setupNavDrawer();
 
+        TaxiCabApplication.getStateManager().setActivity(this);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         MapsFragment mapsFragment = MapsFragment.newInstance();
         mapsFragment.setMapReadyListener(TaxiCabApplication.getStateManager());
