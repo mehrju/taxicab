@@ -1,6 +1,7 @@
 package com.xc0ffeelabs.taxicab.activities;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
@@ -9,6 +10,7 @@ import com.securepreferences.SecurePreferences;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
+import com.xc0ffeelabs.taxicab.managers.StateManager;
 
 public class TaxiCabApplication extends Application {
 
@@ -38,6 +40,10 @@ public class TaxiCabApplication extends Application {
         return NearbyDrivers.get();
     }
 
+    public static StateManager getStateManager() {
+        return StateManager.getInstance();
+    }
+
     private void initializeParse() {
 
         ParseObject.registerSubclass(User.class);
@@ -54,5 +60,9 @@ public class TaxiCabApplication extends Application {
             SecurePreferences.setLoggingEnabled(true);
         }
         return mSecurePrefs;
+    }
+
+    public Context getAppContext() {
+        return getApplicationContext();
     }
 }

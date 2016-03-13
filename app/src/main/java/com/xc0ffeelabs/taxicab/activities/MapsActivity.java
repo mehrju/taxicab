@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
+import com.xc0ffeelabs.taxicab.managers.StateManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,8 +40,11 @@ public class MapsActivity extends AppCompatActivity {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         MapsFragment mapsFragment = MapsFragment.newInstance();
+        mapsFragment.setMapReadyListener(TaxiCabApplication.getStateManager());
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
+
+        TaxiCabApplication.getStateManager().startState(StateManager.States.ListDriver);
     }
 
     private void setupNavDrawer() {
