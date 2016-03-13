@@ -2,6 +2,7 @@ package com.xc0ffeelabs.taxicab.managers;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
+import com.xc0ffeelabs.taxicab.network.TravelTime;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +32,8 @@ public class ListDriversState implements State {
     private GoogleApiClient mApiClient;
     private Map<String, Marker> mMarkerMap = new HashMap<>();
     private Context mContext;
+    private List<User> mSortedUsers;
+    private LatLng mUserLocation;
 
     public ListDriversState() {
         mContext = TaxiCabApplication.get().getAppContext();
@@ -46,8 +50,8 @@ public class ListDriversState implements State {
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
+                mUserLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 10);
                 mMap.animateCamera(cameraUpdate);
                 startLocationUpdates();
                 fetchNearByDrivers();
@@ -64,9 +68,9 @@ public class ListDriversState implements State {
     }
 
     private void fetchNearByDrivers() {
-        NearbyDrivers nearbyDrivers = TaxiCabApplication.getNearbyDrivers();
-        nearbyDrivers.setLocation(new LatLng(37.402721, -122.049888));
-        nearbyDrivers.setRadius(10);
+        final NearbyDrivers nearbyDrivers = TaxiCabApplication.getNearbyDrivers();
+        nearbyDrivers.setLocation(mUserLocation);
+        nearbyDrivers.setRadius(20);
         nearbyDrivers.setRefreshInterval(REFRESH_INTERVAL);
         nearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
             @Override
@@ -75,6 +79,15 @@ public class ListDriversState implements State {
                     Toast.makeText(mContext, "No nearby drivers found", Toast.LENGTH_SHORT).show();
                 } else {
                     addDriverMarkers(users);
+                    if (mSortedUsers == null) {
+                        TravelTime.compute(mUserLocation, users, new TravelTime.TravelTimeComputed() {
+                            @Override
+                            public void onTravelTimeComputed(List<User> drivers) {
+                                mSortedUsers = drivers;
+                                displayAproximateTime();
+                            }
+                        });
+                    }
                 }
             }
 
@@ -84,6 +97,10 @@ public class ListDriversState implements State {
             }
         });
         nearbyDrivers.startQueryDriverLocationUpdates();
+    }
+
+    private void displayAproximateTime() {
+        Log.d("NAYAN", "Appr time = " + mSortedUsers.get(0).getTravelTimeText());
     }
 
     private void addDriverMarkers(List<User> drivers) {

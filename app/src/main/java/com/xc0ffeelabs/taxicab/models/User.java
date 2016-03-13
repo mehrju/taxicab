@@ -1,5 +1,6 @@
 package com.xc0ffeelabs.taxicab.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
@@ -18,6 +19,9 @@ public class User extends ParseUser {
 
     public static final String USER_ROLE = "role";
     public static final String DRIVER_ROLE = "driver";
+
+    private String travelTimeText;
+    private long travelTime;
 
     public User() {
     }
@@ -76,5 +80,25 @@ public class User extends ParseUser {
 
     public ParseGeoPoint getLocation() {
         return getParseGeoPoint(CURRENT_LOCATION);
+    }
+
+    public LatLng getPosition() {
+        return new LatLng(getLocation().getLatitude(), getLocation().getLongitude());
+    }
+
+    public String getTravelTimeText() {
+        return travelTimeText;
+    }
+
+    public void setTravelTimeText(String travelTimeText) {
+        this.travelTimeText = travelTimeText;
+    }
+
+    public long getTravelTime() {
+        return travelTime;
+    }
+
+    public void setTravelTime(long travelTime) {
+        this.travelTime = travelTime;
     }
 }
