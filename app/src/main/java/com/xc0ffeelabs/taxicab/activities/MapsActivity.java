@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.GoogleMap;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 import com.xc0ffeelabs.taxicab.states.StateManager;
@@ -19,13 +21,15 @@ import com.xc0ffeelabs.taxicab.states.StateManager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MapsActivity extends AppCompatActivity {
+public class MapsActivity extends AppCompatActivity implements MapsFragment.MapReady{
 
     @Bind(R.id.nvView) NavigationView mNavView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.dl_nav_drawer) DrawerLayout mDrawer;
 
     private ActionBarDrawerToggle mDrawerToggle;
+    private GoogleMap mMap;
+    private GoogleApiClient mApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +46,9 @@ public class MapsActivity extends AppCompatActivity {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         MapsFragment mapsFragment = MapsFragment.newInstance();
-        mapsFragment.setMapReadyListener(TaxiCabApplication.getStateManager());
+        mapsFragment.setMapReadyListener(this);
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
-
-        TaxiCabApplication.getStateManager().startState(StateManager.States.ListDriver);
     }
 
     private void setupNavDrawer() {
@@ -111,5 +113,20 @@ public class MapsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map, GoogleApiClient apiClient) {
+        mMap = map;
+        mApiClient = apiClient;
+        TaxiCabApplication.getStateManager().startState(StateManager.States.ListDriver, null);
+    }
+
+    public GoogleApiClient getApiClient() {
+        return mApiClient;
+    }
+
+    public GoogleMap getMap() {
+        return mMap;
     }
 }

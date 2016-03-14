@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Pick up"
         android:layout_above="@id/tv_apprTime"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_pickup"/>
 
 </RelativeLayout>

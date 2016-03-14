@@ -1,7 +1,7 @@
 package com.xc0ffeelabs.taxicab.states;
 
-import android.content.Context;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
@@ -22,6 +23,9 @@ import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
 import com.xc0ffeelabs.taxicab.network.TravelTime;
 
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,32 +36,45 @@ public class ListDriversState implements State {
 
     private final static int REFRESH_INTERVAL = 10;
 
+    private Map<String, Marker> mMarkerMap = new HashMap<>();
+    private LatLng mUserLocation;
+    private NearbyDrivers mNearbyDrivers;
+    private volatile boolean mSortRequested = true;
+    protected List<User> mSortedUsers = new ArrayList<>();
+    private MapsActivity mActivity;
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
-    private Map<String, Marker> mMarkerMap = new HashMap<>();
-    private Context mContext;
-    private List<User> mSortedUsers;
-    private LatLng mUserLocation;
-    private MapsActivity mActivity;
-    private NearbyDrivers mNearbyDrivers;
 
-    public ListDriversState() {
-        mContext = TaxiCabApplication.get().getAppContext();
+    private static ListDriversState mListDriverState;
+
+    public static ListDriversState getInstance() {
+        if (mListDriverState == null) {
+            mListDriverState = new ListDriversState();
+        }
+        return mListDriverState;
+    }
+
+    private ListDriversState() {
     }
 
     @Override
-    public void enterState(MapsActivity activity, GoogleMap map, GoogleApiClient client) {
+    public void enterState(MapsActivity activity, Bundle data) {
         mActivity = activity;
-        mMap = map;
-        mApiClient = client;
+        mMap = mActivity.getMap();
+        mApiClient = mActivity.getApiClient();
         initialize();
     }
 
     private void initialize() {
-
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fm_controls, ControlsFragment.newInstance(), "controls");
         ft.commit();
+        ControlsFragment.newInstance().setControlsInteraction(new ControlsFragment.ControlsInteraction() {
+            @Override
+            public void onPickupButtonClicked() {
+                requestToPickup();
+            }
+        });
 
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
@@ -74,7 +91,7 @@ public class ListDriversState implements State {
                     }
                 });
             } else {
-                Toast.makeText(mContext, "Cound't retrieve current location. Please enable GPS location",
+                Toast.makeText(mActivity, "Cound't retrieve current location. Please enable GPS location",
                         Toast.LENGTH_SHORT).show();
             }
         } catch (SecurityException e) {
@@ -82,12 +99,25 @@ public class ListDriversState implements State {
         }
     }
 
+    private void requestToPickup() {
+        Bundle b = new Bundle();
+        List<String> drivers = new ArrayList<>();
+        for (User driver : mSortedUsers) {
+            drivers.add(driver.getObjectId());
+        }
+        PickupRequestedState.PickupRequestData data =
+                new PickupRequestedState.PickupRequestData(ParseUser.getCurrentUser().getObjectId(),
+                        drivers);
+        b.putParcelable(PickupRequestedState.PickupRequestData.PICKUP_DATA, Parcels.wrap(data));
+        TaxiCabApplication.getStateManager().startState(StateManager.States.TripRequested, b);
+    }
+
     private void repositionCamera(CameraPosition cameraPosition) {
         displayAproximateTime("--");
         mNearbyDrivers.setLocation(cameraPosition.target);
         mNearbyDrivers.getNow();
         mUserLocation = cameraPosition.target;
-        mSortedUsers = null;
+        mSortRequested = true;
     }
 
     private void startLocationUpdates() {
@@ -100,19 +130,21 @@ public class ListDriversState implements State {
         mNearbyDrivers.setRefreshInterval(REFRESH_INTERVAL);
         mNearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
             @Override
-            public void onDriverLocationUpdate(List<User> users) {
+            public void onDriverLocationUpdate(final List<User> users) {
                 if (users.size() <= 0) {
-                    Toast.makeText(mContext, "No nearby drivers found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "No nearby drivers found", Toast.LENGTH_SHORT).show();
                 } else {
                     addDriverMarkers(users);
-                    if (mSortedUsers == null) {
+                    if (mSortRequested) {
                         TravelTime.compute(mUserLocation, users, new TravelTime.TravelTimeComputed() {
                             @Override
                             public void onTravelTimeComputed(List<User> drivers) {
-                                mSortedUsers = drivers;
+                                mSortedUsers.clear();
+                                mSortedUsers.addAll(users);
                                 if (drivers != null && !drivers.isEmpty()) {
                                     displayAproximateTime(drivers.get(0).getTravelTimeText());
                                 }
+                                mSortRequested = false;
                             }
                         });
                     }
@@ -121,7 +153,7 @@ public class ListDriversState implements State {
 
             @Override
             public void onFailed() {
-                Toast.makeText(mContext, "Failed to get nearby drivers", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "Failed to get nearby drivers", Toast.LENGTH_SHORT).show();
             }
         });
         mNearbyDrivers.startQueryDriverLocationUpdates();
@@ -156,6 +188,6 @@ public class ListDriversState implements State {
 
     @Override
     public void exitState() {
-
+        mNearbyDrivers.stopQueryDriverLocationUpdates();
     }
 }

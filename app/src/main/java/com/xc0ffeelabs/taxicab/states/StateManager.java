@@ -1,14 +1,14 @@
 package com.xc0ffeelabs.taxicab.states;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.xc0ffeelabs.taxicab.activities.MapsActivity;
-import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
+import android.os.Bundle;
 
-public class StateManager implements MapsFragment.MapReady {
+import com.xc0ffeelabs.taxicab.activities.MapsActivity;
+
+public class StateManager {
 
     public enum States {
         ListDriver,
+        TripRequested,
         TaxiEnroute,
         TaxiArrived,
         DestEnroute,
@@ -18,10 +18,7 @@ public class StateManager implements MapsFragment.MapReady {
 
     private static StateManager ourInstance;
 
-    private GoogleMap mMap = null;
-    private GoogleApiClient mClient = null;
     private State mCurrentState = null;
-    private boolean mStartWhenReadyState = false;
     private MapsActivity mAcitivity;
 
     public static StateManager getInstance() {
@@ -38,32 +35,21 @@ public class StateManager implements MapsFragment.MapReady {
         mAcitivity = activity;
     }
 
-    @Override
-    public void onMapReady(GoogleMap map, GoogleApiClient apiClient) {
-        mMap = map;
-        mClient = apiClient;
-        if (mStartWhenReadyState) {
-            mCurrentState.enterState(mAcitivity, map, apiClient);
-            mStartWhenReadyState = false;
-        }
-    }
-
-    public void startState(States state) {
+    public void startState(States state, Bundle data) {
         if (mCurrentState != null) {
             mCurrentState.exitState();
         }
 
         switch (state) {
             case ListDriver:
-                mCurrentState = new ListDriversState();
-                if (mMap == null) {
-                    mStartWhenReadyState = true;
-                } else {
-                    mCurrentState.enterState(mAcitivity, mMap, mClient);
-                }
+                mCurrentState = ListDriversState.getInstance();
+                break;
+            case TripRequested:
+                mCurrentState = PickupRequestedState.getInstance();
                 break;
             default:
                 throw new UnsupportedOperationException("No such state");
         }
+        mCurrentState.enterState(mAcitivity, data);
     }
 }
