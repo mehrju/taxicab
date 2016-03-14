@@ -90,7 +90,6 @@ public class PickupRequestedState implements State {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    Log.d("NAYAN", "Done. Received response!");
                     statusChangeMonitor(object);
                 } else {
                     Toast.makeText(mActivity, "Sorry, something went wrong while booking. Please try again",
