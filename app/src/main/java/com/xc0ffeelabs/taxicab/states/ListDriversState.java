@@ -1,4 +1,4 @@
-package com.xc0ffeelabs.taxicab.managers;
+package com.xc0ffeelabs.taxicab.states;
 
 import android.content.Context;
 import android.location.Location;
@@ -10,6 +10,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -38,6 +39,7 @@ public class ListDriversState implements State {
     private List<User> mSortedUsers;
     private LatLng mUserLocation;
     private MapsActivity mActivity;
+    private NearbyDrivers mNearbyDrivers;
 
     public ListDriversState() {
         mContext = TaxiCabApplication.get().getAppContext();
@@ -61,10 +63,16 @@ public class ListDriversState implements State {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
                 mUserLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 10);
-                mMap.animateCamera(cameraUpdate);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 14);
+                mMap.moveCamera(cameraUpdate);
                 startLocationUpdates();
                 fetchNearByDrivers();
+                mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+                    @Override
+                    public void onCameraChange(CameraPosition cameraPosition) {
+                        repositionCamera(cameraPosition);
+                    }
+                });
             } else {
                 Toast.makeText(mContext, "Cound't retrieve current location. Please enable GPS location",
                         Toast.LENGTH_SHORT).show();
@@ -74,15 +82,23 @@ public class ListDriversState implements State {
         }
     }
 
+    private void repositionCamera(CameraPosition cameraPosition) {
+        displayAproximateTime("--");
+        mNearbyDrivers.setLocation(cameraPosition.target);
+        mNearbyDrivers.getNow();
+        mUserLocation = cameraPosition.target;
+        mSortedUsers = null;
+    }
+
     private void startLocationUpdates() {
     }
 
     private void fetchNearByDrivers() {
-        final NearbyDrivers nearbyDrivers = TaxiCabApplication.getNearbyDrivers();
-        nearbyDrivers.setLocation(mUserLocation);
-        nearbyDrivers.setRadius(20);
-        nearbyDrivers.setRefreshInterval(REFRESH_INTERVAL);
-        nearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
+        mNearbyDrivers = TaxiCabApplication.getNearbyDrivers();
+        mNearbyDrivers.setLocation(mUserLocation);
+        mNearbyDrivers.setRadius(20);
+        mNearbyDrivers.setRefreshInterval(REFRESH_INTERVAL);
+        mNearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
             @Override
             public void onDriverLocationUpdate(List<User> users) {
                 if (users.size() <= 0) {
@@ -94,7 +110,9 @@ public class ListDriversState implements State {
                             @Override
                             public void onTravelTimeComputed(List<User> drivers) {
                                 mSortedUsers = drivers;
-                                displayAproximateTime();
+                                if (drivers != null && !drivers.isEmpty()) {
+                                    displayAproximateTime(drivers.get(0).getTravelTimeText());
+                                }
                             }
                         });
                     }
@@ -106,12 +124,12 @@ public class ListDriversState implements State {
                 Toast.makeText(mContext, "Failed to get nearby drivers", Toast.LENGTH_SHORT).show();
             }
         });
-        nearbyDrivers.startQueryDriverLocationUpdates();
+        mNearbyDrivers.startQueryDriverLocationUpdates();
     }
 
-    private void displayAproximateTime() {
+    private void displayAproximateTime(String text) {
         if (mSortedUsers != null && !mSortedUsers.isEmpty()) {
-            ControlsFragment.newInstance().setApprTime(mSortedUsers.get(0).getTravelTimeText());
+            ControlsFragment.newInstance().setApprTime(text);
         }
     }
 

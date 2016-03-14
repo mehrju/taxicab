@@ -1,4 +1,4 @@
-package com.xc0ffeelabs.taxicab.managers;
+package com.xc0ffeelabs.taxicab.states;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;

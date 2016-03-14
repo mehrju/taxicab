@@ -10,7 +10,7 @@ import com.securepreferences.SecurePreferences;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
-import com.xc0ffeelabs.taxicab.managers.StateManager;
+import com.xc0ffeelabs.taxicab.states.StateManager;
 
 public class TaxiCabApplication extends Application {
 

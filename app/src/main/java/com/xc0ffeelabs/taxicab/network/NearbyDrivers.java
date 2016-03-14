@@ -44,7 +44,7 @@ public class NearbyDrivers {
         mHandler = new MyHandler(Looper.getMainLooper());
     }
 
-    public void setLocation(LatLng location) {
+    public synchronized void setLocation(LatLng location) {
         mLocation = location;
     }
 
@@ -61,7 +61,7 @@ public class NearbyDrivers {
         mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LOCATION, 0);
     }
 
-    public void stopQueryDriverLocationUpdates() {
+    synchronized public void stopQueryDriverLocationUpdates() {
         mUpdateRequested = false;
         mRefreshInterval = DEFAULT_INTERVAL;
         mListener = null;
@@ -73,7 +73,11 @@ public class NearbyDrivers {
         mRefreshInterval = interval;
     }
 
-    private void queryNearByDrivers() {
+    public void getNow() {
+        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LOCATION, 0);
+    }
+
+    synchronized private void queryNearByDrivers() {
         ParseGeoPoint userLocation = new ParseGeoPoint(mLocation.latitude, mLocation.longitude);
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         query.whereEqualTo(User.ROLE, User.DRIVER_ROLE);

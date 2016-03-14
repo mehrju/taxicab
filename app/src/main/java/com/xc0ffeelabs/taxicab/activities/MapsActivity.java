@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
-import com.xc0ffeelabs.taxicab.managers.StateManager;
+import com.xc0ffeelabs.taxicab.states.StateManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
