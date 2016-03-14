@@ -47,6 +47,9 @@ public class StateManager {
             case TripRequested:
                 mCurrentState = PickupRequestedState.getInstance();
                 break;
+            case TaxiEnroute:
+                mCurrentState = TaxiEnroute.getInstance();
+                break;
             default:
                 throw new UnsupportedOperationException("No such state");
         }

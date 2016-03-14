@@ -27,6 +27,7 @@ import com.xc0ffeelabs.taxicab.network.TravelTime;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -121,7 +122,9 @@ public class ListDriversState implements State {
             drivers.add(driver.getObjectId());
         }
         PickupRequestedState.PickupRequestData data =
-                new PickupRequestedState.PickupRequestData(ParseUser.getCurrentUser().getObjectId(),
+                new PickupRequestedState.PickupRequestData(
+                        ParseUser.getCurrentUser().getObjectId(),
+                        mUserLocation,
                         drivers);
         b.putParcelable(PickupRequestedState.PickupRequestData.PICKUP_DATA, Parcels.wrap(data));
         TaxiCabApplication.getStateManager().startState(StateManager.States.TripRequested, b);
@@ -205,5 +208,12 @@ public class ListDriversState implements State {
     @Override
     public void exitState() {
         mNearbyDrivers.stopQueryDriverLocationUpdates();
+        mMap.setOnCameraChangeListener(null);
+        mUserMarker.remove();
+        Collection<Marker> driverMarkers = mMarkerMap.values();
+        for (Marker marker : driverMarkers) {
+            marker.remove();
+        }
+        mMarkerMap.clear();
     }
 }

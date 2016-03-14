@@ -7,9 +7,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -43,20 +43,24 @@ public class PickupRequestedState implements State {
         public static final String PICKUP_DATA = "pickupData";
 
         String mUserId;
+        LatLng mUserLocation;
         List<String> mDriverIds;
 
         public PickupRequestData() {
         }
 
         public PickupRequestData(String userId,
+                                 LatLng userLocation,
                                  List<String> driverIds) {
             mUserId = userId;
+            mUserLocation = userLocation;
             mDriverIds = driverIds;
         }
     }
 
     private MapsActivity mActivity;
     private String mUserId;
+    private LatLng mUserLocation;
     private List<String> mDriverIds;
     private Handler mHandler = new MyHandler(Looper.myLooper());
 
@@ -78,6 +82,7 @@ public class PickupRequestedState implements State {
         PickupRequestData pickupRequestData =
                 Parcels.unwrap(data.getParcelable(PickupRequestData.PICKUP_DATA));
         mUserId = pickupRequestData.mUserId;
+        mUserLocation = pickupRequestData.mUserLocation;
         mDriverIds = pickupRequestData.mDriverIds;
         initialize();
     }
@@ -107,7 +112,7 @@ public class PickupRequestedState implements State {
         msg.setData(data);
         /* TODO: Uncomment the below line in the final version */
         //mHandler.sendMessage(msg);
-        mHandler.sendMessageDelayed(msg, 5000);
+        mHandler.sendMessageDelayed(msg, 3000);
     }
 
     private void fetchState(final String objectId) {
@@ -157,7 +162,11 @@ public class PickupRequestedState implements State {
     }
 
     private void tripConfirmed(ParseObject driver) {
-        Log.d("NAYAN", "Trip confimed. Driver id : " + driver.getObjectId());
+        Bundle data = new Bundle();
+        TaxiEnroute.TaxiEnrouteData enrouteData =
+                new TaxiEnroute.TaxiEnrouteData(mUserLocation, driver.getObjectId());
+        data.putParcelable(TaxiEnroute.TaxiEnrouteData.ENROUTE_DATA, Parcels.wrap(enrouteData));
+        TaxiCabApplication.getStateManager().startState(StateManager.States.TaxiEnroute, data);
     }
 
     @Override
