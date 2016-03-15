@@ -2,9 +2,12 @@ package com.xc0ffeelabs.taxicab.states;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
@@ -30,6 +34,10 @@ import org.w3c.dom.Document;
 import java.util.ArrayList;
 
 public class TaxiEnroute implements State {
+
+    private static final int MSG_REFRESH_LOCATION = 1;
+    private static final int REFRESH_INTERVAL = 10;  // in sec
+    private static final String TAG = TaxiEnroute.class.getSimpleName();
 
     @Parcel
     public static class TaxiEnrouteData {
@@ -56,10 +64,11 @@ public class TaxiEnroute implements State {
     private Marker mUserMarker;
     private Marker mDriverMarker;
     private GoogleMap mMap;
-    private GoogleApiClient mApiClient;
     private LatLng mUserLocation;
     private User mDriver;
     private LatLng mDriverLocation;
+    private Handler mHandler = new MyHandler(Looper.getMainLooper());
+    private boolean mRefreshRequested;
 
     public static TaxiEnroute getInstance() {
         if (mTaxiEnroute == null) {
@@ -85,12 +94,15 @@ public class TaxiEnroute implements State {
 
     @Override
     public void exitState() {
+        stopDriverLocationUpdate();
+    }
 
+    public void stopDriverLocationUpdate() {
+        mRefreshRequested = false;
     }
 
     private void initialize() {
         mMap = mActivity.getMap();
-        mApiClient = mActivity.getApiClient();
 
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fm_controls, TaxiEnrouteFragment.getInstance(), "enroute");
@@ -143,6 +155,12 @@ public class TaxiEnroute implements State {
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.animateCamera(cu);
         showRoute();
+        updateDriverLocation();
+    }
+
+    private void updateDriverLocation() {
+        mRefreshRequested = true;
+        mHandler.sendEmptyMessage(MSG_REFRESH_LOCATION);
     }
 
     private void showRoute() {
@@ -165,5 +183,46 @@ public class TaxiEnroute implements State {
             }
             mMap.addPolyline(rectLine);
         }
+    }
+
+    private class MyHandler extends Handler {
+
+        MyHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_REFRESH_LOCATION:
+                    if (mRefreshRequested) {
+                        fetchDriverPosition();
+                        sendEmptyMessageDelayed(MSG_REFRESH_LOCATION, REFRESH_INTERVAL * 1000);
+                    }
+                    break;
+                default:
+                    throw new UnsupportedOperationException("Can't handle");
+            }
+        }
+    }
+
+    private void fetchDriverPosition() {
+        mDriver.fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    updateDriverMarker();
+                } else {
+                    Log.e(TAG, "Unable to update driver location");
+                }
+            }
+        });
+    }
+
+    private void updateDriverMarker() {
+        mDriverLocation = new LatLng(mDriver.getLocation().getLatitude(),
+                mDriver.getLocation().getLongitude());
+        Log.d("NAYAN", "Updare driver marker. Location = " + mDriverLocation);
+        mDriverMarker.setPosition(mDriverLocation);
     }
 }
