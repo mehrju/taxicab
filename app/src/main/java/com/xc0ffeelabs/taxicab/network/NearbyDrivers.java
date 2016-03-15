@@ -84,10 +84,12 @@ public class NearbyDrivers {
         query.whereWithinMiles("currentLocation", userLocation, mMiles);
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> objects, ParseException e) {
-                if (e == null) {
-                    mListener.onDriverLocationUpdate(objects);
-                } else {
-                    mListener.onFailed();
+                if (mListener != null) {
+                    if (e == null) {
+                        mListener.onDriverLocationUpdate(objects);
+                    } else {
+                        mListener.onFailed();
+                    }
                 }
             }
         });
