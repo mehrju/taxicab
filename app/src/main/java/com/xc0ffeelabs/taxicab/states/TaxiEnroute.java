@@ -26,6 +26,7 @@ import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.fragments.TaxiEnrouteFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.GMapV2Direction;
+import com.xc0ffeelabs.taxicab.stubs.NavigateDriverToUserStub;
 
 import org.parceler.Parcel;
 import org.parceler.Parcels;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 public class TaxiEnroute implements State {
 
     private static final int MSG_REFRESH_LOCATION = 1;
-    private static final int REFRESH_INTERVAL = 10;  // in sec
+    private static final int REFRESH_INTERVAL = 7;  // in sec
     private static final String TAG = TaxiEnroute.class.getSimpleName();
 
     @Parcel
@@ -156,6 +157,9 @@ public class TaxiEnroute implements State {
         mMap.animateCamera(cu);
         showRoute();
         updateDriverLocation();
+
+        /* TODO: Remove this for final app */
+        new NavigateDriverToUserStub(mDriverLocation, mUserLocation, mDriver).run();
     }
 
     private void updateDriverLocation() {
@@ -222,7 +226,6 @@ public class TaxiEnroute implements State {
     private void updateDriverMarker() {
         mDriverLocation = new LatLng(mDriver.getLocation().getLatitude(),
                 mDriver.getLocation().getLongitude());
-        Log.d("NAYAN", "Updare driver marker. Location = " + mDriverLocation);
         mDriverMarker.setPosition(mDriverLocation);
     }
 }

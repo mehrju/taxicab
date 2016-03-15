@@ -83,7 +83,7 @@ public class ListDriversState implements State {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
                 mUserLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 14);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 10);
                 setUserMarker();
                 mMap.moveCamera(cameraUpdate);
                 startLocationUpdates();
