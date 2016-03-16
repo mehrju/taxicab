@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
 import com.securepreferences.SecurePreferences;
@@ -52,6 +53,8 @@ public class TaxiCabApplication extends Application {
                 .applicationId(APP_ID) // should correspond to APP_ID env variable
                 .addNetworkInterceptor(new ParseLogInterceptor())
                 .server(PARSE_URL).build());
+
+        ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 
     public SecurePreferences getSecureSharedPreferences() {

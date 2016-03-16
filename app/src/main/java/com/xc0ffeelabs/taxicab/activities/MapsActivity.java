@@ -14,8 +14,11 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
+import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.states.StateManager;
 
 import butterknife.Bind;
@@ -44,11 +47,20 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
 
         TaxiCabApplication.getStateManager().setActivity(this);
 
+        registerUserWithParseInstallation();
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         MapsFragment mapsFragment = MapsFragment.newInstance();
         mapsFragment.setMapReadyListener(this);
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
+    }
+
+    private void registerUserWithParseInstallation() {
+        User user = (User) ParseUser.getCurrentUser();
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("ownerId", user.getObjectId());
+        installation.saveInBackground();
     }
 
     private void setupNavDrawer() {

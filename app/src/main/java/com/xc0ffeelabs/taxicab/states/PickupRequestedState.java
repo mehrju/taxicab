@@ -32,7 +32,7 @@ public class PickupRequestedState implements State {
     private static final int REFRESH_INTERVAL = 5; // in sec
     /* We will wait for max 20sec in this state. If no response within 20 sec,
     *  we will timeout */
-    private static final int MAX_WAIT = 10; // in sec
+    private static final int MAX_WAIT = 60; // in sec
     private static final int MAX_RETRY = MAX_WAIT / 5;
     private static final String TRIP_OBJECT_ID = "tripObjectId";
 
