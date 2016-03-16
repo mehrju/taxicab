@@ -17,7 +17,7 @@ public class User extends ParseUser {
     public static final String CURRENT_LOCATION = "currentLocation";
     public static final String STATE = "state";
 
-    public static final String USER_ROLE = "role";
+    public static final String USER_ROLE = "user";
     public static final String DRIVER_ROLE = "driver";
 
     private String travelTimeText;
