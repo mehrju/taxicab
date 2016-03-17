@@ -75,11 +75,9 @@ Sprint 2 progress:
 * [x] Upon reaching destination, driver accepts the cash payment and ends the trip
 * [x] Used Google directions api to compute the approximate time
 * [x] Push notifications to let user know of drivers arrival and driver know of user request
-* 
-*Walkthrough of all user stories in User app:*
 
-![Video Walkthrough](demo-sprint2.gif)
 
-*Walkthrough of all user stories in Driver app:*
+*Walkthrough of all user stories*
 
-![Video Walkthrough](driver-demo.mp4)
+* <a href="https://youtu.be/xPutdQ1TL4k">User app</a>.
+* <a href="https://youtu.be/LGfYxMor-b4">Driver app app</a>.
