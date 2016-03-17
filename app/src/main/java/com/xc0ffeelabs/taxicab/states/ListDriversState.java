@@ -150,8 +150,9 @@ public class ListDriversState implements State {
         mNearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
             @Override
             public void onDriverLocationUpdate(final List<User> users) {
-                if (users.size() <= 0) {
-                    Toast.makeText(mActivity, "No nearby drivers found", Toast.LENGTH_SHORT).show();
+                if (false) {
+                    /* TODO: Fix this */
+                    //Toast.makeText(mActivity, "No nearby drivers found", Toast.LENGTH_SHORT).show();
                 } else {
                     addDriverMarkers(users);
                     if (mSortRequested) {

@@ -23,13 +23,20 @@ public class NavigateDriverToUserStub {
     private LatLng mSrc;
     private LatLng mDest;
     private User mDriver;
+    private DriverArrived mListener;
+
+    public interface DriverArrived {
+        void onDriverArrived();
+    }
 
     public NavigateDriverToUserStub(LatLng src,
                                     LatLng to,
-                                    User driver) {
+                                    User driver,
+                                    DriverArrived listener) {
         mSrc = src;
         mDest = to;
         mDriver = driver;
+        mListener = listener;
     }
 
     public void run() {
@@ -50,7 +57,7 @@ public class NavigateDriverToUserStub {
                 Gson gson = new GsonBuilder().create();
                 DirectionsResponse response = gson.fromJson(responseString, DirectionsResponse.class);
                 if (response != null && response.routes != null
-                        && response.routes.size() >0
+                        && response.routes.size() > 0
                         && response.routes.get(0).legs != null
                         && response.routes.get(0).legs.size() > 0
                         && response.routes.get(0).legs.get(0).steps != null) {
@@ -67,11 +74,13 @@ public class NavigateDriverToUserStub {
                                     mDriver.put("currentLocation", point);
                                     mDriver.saveInBackground();
                                     try {
-                                        Thread.sleep(5000);
+                                        Thread.sleep(10000);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
                                 }
+
+                                mListener.onDriverArrived();
                             }
                         }
                     }).start();

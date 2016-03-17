@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FunctionCallback;
@@ -94,12 +94,24 @@ public class PickupRequestedState implements State {
         ParseEndPoints.initiateTrip(mUserId, mDriverIds, new FunctionCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
+                Log.d("NAYAN", "Trip id = " + object.getObjectId());
+                object.fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e == null) {
+                            Log.d("NAYAN", "trip id = " + object.getObjectId());
+                            statusChangeMonitor(object);
+                        } else {
+                            Log.d("NAYAN", "Something went wrong");
+                        }
+                    }
+                });/*
                 if (e == null) {
                     statusChangeMonitor(object);
                 } else {
                     Toast.makeText(mActivity, "Sorry, something went wrong while booking. Please try again",
                             Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }

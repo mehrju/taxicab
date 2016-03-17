@@ -32,4 +32,9 @@
     <string name="title_unable_to_book">Unable to book</string>
     <string name="msg_unable_to_book">Something went wrong while trying to book. Please rety</string>
     <string name="driver_approching">Taxi is on its way to pick you up!</string>
+    <string name="driver_dst">You are on your way to destination</string>
+    <string name="driver_arrived">Driver Arrived</string>
+    <string name="driver_arrived_msg">Driver has arrived. Please find him</string>
+    <string name="dst_arrived">You have reached</string>
+    <string name="dst_arrived_msg">Thank for riding with us. Do NOT forget to pay. And visit us again</string>
 </resources>

@@ -81,6 +81,7 @@ public class NearbyDrivers {
         ParseGeoPoint userLocation = new ParseGeoPoint(mLocation.latitude, mLocation.longitude);
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         query.whereEqualTo(User.ROLE, User.DRIVER_ROLE);
+        query.whereEqualTo(User.STATE, "active");
         query.whereWithinMiles("currentLocation", userLocation, mMiles);
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> objects, ParseException e) {

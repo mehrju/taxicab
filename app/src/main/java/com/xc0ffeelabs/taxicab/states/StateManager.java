@@ -50,6 +50,9 @@ public class StateManager {
             case TaxiEnroute:
                 mCurrentState = TaxiEnroute.getInstance();
                 break;
+            case DestEnroute:
+                mCurrentState = EnrouteToDstState.getInstance();
+                break;
             default:
                 throw new UnsupportedOperationException("No such state");
         }

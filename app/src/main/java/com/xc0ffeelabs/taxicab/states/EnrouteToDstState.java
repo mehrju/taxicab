@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -26,8 +25,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
-import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
-import com.xc0ffeelabs.taxicab.fragments.TaxiEnrouteFragment;
+import com.xc0ffeelabs.taxicab.fragments.EnrouteToDestFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.GMapV2Direction;
 import com.xc0ffeelabs.taxicab.stubs.NavigateDriverToUserStub;
@@ -38,59 +36,58 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 
-public class TaxiEnroute implements State {
+public class EnrouteToDstState implements State {
 
     private static final int MSG_REFRESH_LOCATION = 1;
     private static final int REFRESH_INTERVAL = 7;  // in sec
-    private static final String TAG = TaxiEnroute.class.getSimpleName();
+    private static final String TAG = EnrouteToDstState.class.getSimpleName();
 
     @Parcel
-    public static class TaxiEnrouteData {
+    public static class EnrouteToDstData {
 
         public static final String ENROUTE_DATA = "enrouteData";
 
         LatLng mUserLocation;
         String mDriverId;
 
-        public TaxiEnrouteData() {
+        public EnrouteToDstData() {
         }
 
-        public TaxiEnrouteData(LatLng userLocation,
-                               String driverId) {
+        public EnrouteToDstData(LatLng userLocation,
+                                String driverId) {
             mUserLocation = userLocation;
             mDriverId = driverId;
         }
     }
 
-    private static TaxiEnroute mTaxiEnroute;
-
     private MapsActivity mActivity;
-    private TaxiEnrouteData mEnrouteData;
-    private Marker mUserMarker;
-    private Marker mDriverMarker;
     private GoogleMap mMap;
+    private EnrouteToDstData mEnrouteData;
     private LatLng mUserLocation;
-    private User mDriver;
-    private LatLng mDriverLocation;
-    private Handler mHandler = new MyHandler(Looper.getMainLooper());
+    private Marker mUserMarker;
+    private static EnrouteToDstState mTaxiEnroute;
     private boolean mRefreshRequested;
-    private Polyline mLine;
+    private LatLng mDriverLocation;
+    private Marker mDriverMarker;
+    private User mDriver;
+    private Handler mHandler = new MyHandler(Looper.getMainLooper());
+    final private LatLng mDest = new LatLng(37.402601, -122.035755);
 
-    public static TaxiEnroute getInstance() {
+    public static EnrouteToDstState getInstance() {
         if (mTaxiEnroute == null) {
-            mTaxiEnroute = new TaxiEnroute();
+            mTaxiEnroute = new EnrouteToDstState();
         }
         return mTaxiEnroute;
     }
 
-    private TaxiEnroute() {
+    private EnrouteToDstState() {
     }
 
     @Override
     public void enterState(MapsActivity activity, Bundle data) {
         mActivity = activity;
         mEnrouteData = Parcels.unwrap(
-                data.getParcelable(TaxiEnrouteData.ENROUTE_DATA));
+                data.getParcelable(EnrouteToDstData.ENROUTE_DATA));
         mUserLocation = mEnrouteData.mUserLocation;
         if (mEnrouteData == null) {
             throw new IllegalArgumentException("Why? Why? are you sending null data. I'm tired");
@@ -98,41 +95,13 @@ public class TaxiEnroute implements State {
         initialize();
     }
 
-    @Override
-    public void exitState() {
-        stopDriverLocationUpdate();
-        mUserMarker.remove();
-        mDriverMarker.remove();
-        if (mLine != null) {
-            mLine.remove();
-        }
-    }
-
-    public void stopDriverLocationUpdate() {
-        mRefreshRequested = false;
-    }
-
     private void initialize() {
         mMap = mActivity.getMap();
-
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fm_controls, TaxiEnrouteFragment.getInstance(), "enroute");
+        ft.replace(R.id.fm_controls, EnrouteToDestFragment.getInstance(), "enroute");
         ft.commit();
-
         addUserMarker();
         fetchDriverDetails();
-    }
-
-    private void addUserMarker() {
-        if (mUserMarker == null) {
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(mUserLocation)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_grey600_48dp))
-                    .title("Me");
-            mUserMarker = mMap.addMarker(markerOptions);
-        } else {
-            mUserMarker.setPosition(mUserLocation);
-        }
     }
 
     private void fetchDriverDetails() {
@@ -140,7 +109,6 @@ public class TaxiEnroute implements State {
         query.getInBackground(mEnrouteData.mDriverId, new GetCallback<User>() {
             @Override
             public void done(User object, ParseException e) {
-                TaxiEnrouteFragment.getInstance().hideProgress();
                 addDriverMarker(object);
             }
         });
@@ -160,50 +128,41 @@ public class TaxiEnroute implements State {
     private void zoomCamera() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(mUserLocation);
-        builder.include(mDriverLocation);
+
+        /* Dummy end location. Let's go to golden gate bridge. Bright sunny day */
+        LatLng endLocation = mDest;
+        builder.include(mUserLocation);
+        builder.include(endLocation);
         LatLngBounds bounds = builder.build();
         int padding  = (int) mActivity.getResources().getDimension(R.dimen.map_offset);
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.animateCamera(cu);
-        showRoute();
+        showRoute(mUserLocation, endLocation);
         updateDriverLocation();
 
         /* TODO: Remove this for final app */
-        new NavigateDriverToUserStub(mDriverLocation, mUserLocation, mDriver, new NavigateDriverToUserStub.DriverArrived() {
+        new NavigateDriverToUserStub(mUserLocation, endLocation, mDriver, new NavigateDriverToUserStub.DriverArrived() {
             @Override
             public void onDriverArrived() {
-                moveToDestState();
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showDriverReached();
+                    }
+                });
             }
         }).run();
     }
 
-    private void moveToDestState() {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showDriverArrived();
-            }
-        });
-    }
-
-    private void showDriverArrived() {
+    private void showDriverReached() {
         new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.driver_arrived)
-                .setMessage(R.string.driver_arrived_msg)
+                .setTitle(R.string.dst_arrived)
+                .setMessage(R.string.dst_arrived_msg)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        changeState();
                     }
                 }).create().show();
-    }
-
-    private void changeState() {
-        Bundle data = new Bundle();
-        EnrouteToDstState.EnrouteToDstData enrouteData =
-                new EnrouteToDstState.EnrouteToDstData(mUserLocation, mDriver.getObjectId());
-        data.putParcelable(EnrouteToDstState.EnrouteToDstData.ENROUTE_DATA, Parcels.wrap(enrouteData));
-        TaxiCabApplication.getStateManager().startState(StateManager.States.DestEnroute, data);
     }
 
     private void updateDriverLocation() {
@@ -211,8 +170,8 @@ public class TaxiEnroute implements State {
         mHandler.sendEmptyMessage(MSG_REFRESH_LOCATION);
     }
 
-    private void showRoute() {
-        new GMapV2Direction(mDriverLocation, mUserLocation, new GMapV2Direction.RouteReady() {
+    private void showRoute(LatLng src, LatLng dest) {
+        new GMapV2Direction(src, dest, new GMapV2Direction.RouteReady() {
             @Override
             public void onRouteReady(Document document) {
                 drawRoute(document);
@@ -229,8 +188,25 @@ public class TaxiEnroute implements State {
             for (int i = 0; i < directionPoint.size(); i++) {
                 rectLine.add(directionPoint.get(i));
             }
-            mLine = mMap.addPolyline(rectLine);
+            mMap.addPolyline(rectLine);
         }
+    }
+
+    private void addUserMarker() {
+        if (mUserMarker == null) {
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(mDest)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_grey600_48dp))
+                    .title("Destination");
+            mUserMarker = mMap.addMarker(markerOptions);
+        } else {
+            mUserMarker.setPosition(mUserLocation);
+        }
+    }
+
+    @Override
+    public void exitState() {
+
     }
 
     private class MyHandler extends Handler {
