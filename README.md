@@ -81,3 +81,5 @@ Sprint 2 progress:
 
 * <a href="https://youtu.be/xPutdQ1TL4k">User app</a>.
 * <a href="https://youtu.be/LGfYxMor-b4">Driver app app</a>.
+* Link to Trello agile dashboard: <a href="https://trello.com/b/eeiqsYbE/taxicab">here</a>.
+We are using free version of Trello for project management which doesn't allow to share the board publicly. Please use <a href="https://trello.com/invite/taxicabteam/4623523c13fed5d9b05fd845c8026f0f">this link</a> to add yourself as a member to our Trello group and view our progress.
