@@ -8,16 +8,16 @@
 * [x] Driver can create account/register with Taxi Cab service
 * [x] Drive can login to his account
 * [x] User once logged in is presented with a Map view.
-* [ ] User can see nearby drivers
-* [ ] User can book a Taxi
-* [ ] Once booked, user will be shown with the position of approaching driver
-* [ ] Once driver picks up the customer, user app will show customers current position on the map as they approach to their destination
-* [ ] Upon reaching the destination user pays for the trip using cash payment
-* [ ] When user books a ride, all nearby drivers will be notified of the incoming reservation.
-* [ ] Driver is asked to accept the reservation and will be navigated to users location using Google Map
-* [ ] Once driver picks up the user, he changes the state to “Enroute” to destination
-* [ ] Driver is then navigated to users destination
-* [ ] Upon reaching destination, driver accepts the cash payment and ends the trip
+* [x] User can see nearby drivers
+* [x] User can book a Taxi
+* [x] Once booked, user will be shown with the position of approaching driver
+* [x] Once driver picks up the customer, user app will show customers current position on the map as they approach to their destination
+* [x] Upon reaching the destination user pays for the trip using cash payment
+* [x] When user books a ride, all nearby drivers will be notified of the incoming reservation.
+* [x] Driver is asked to accept the reservation and will be navigated to users location using Google Map
+* [x] Once driver picks up the user, he changes the state to “Enroute” to destination
+* [x] Driver is then navigated to users destination
+* [x] Upon reaching destination, driver accepts the cash payment and ends the trip
 
 *Optional User Stories:*
 * [ ] Verify user phone number during registration process
@@ -60,3 +60,26 @@ Sprint 1 progress:
 *Walkthrough of all user stories in Driver app:*
 
 ![Video Walkthrough](demo-driver.gif)
+
+Sprint 2 progress:
+-----------------
+* [x] User can see nearby drivers
+* [x] User can book a Taxi
+* [x] Once booked, user will be shown with the position of approaching driver
+* [x] Once driver picks up the customer, user app will show customers current position on the map as they approach to their destination
+* [x] Upon reaching the destination user pays for the trip using cash payment
+* [x] When user books a ride, all nearby drivers will be notified of the incoming reservation.
+* [x] Driver is asked to accept the reservation and will be navigated to users location using Google Map
+* [x] Once driver picks up the user, he changes the state to “Enroute” to destination
+* [x] Driver is then navigated to users destination
+* [x] Upon reaching destination, driver accepts the cash payment and ends the trip
+* [x] Used Google directions api to compute the approximate time
+* [x] Push notifications to let user know of drivers arrival and driver know of user request
+* 
+*Walkthrough of all user stories in User app:*
+
+![Video Walkthrough](demo-sprint2.gif)
+
+*Walkthrough of all user stories in Driver app:*
+
+![Video Walkthrough](driver-demo.mp4)
