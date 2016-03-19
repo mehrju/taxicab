@@ -58,7 +58,7 @@ public class NearbyDrivers {
 
     public void startQueryDriverLocationUpdates() {
         mUpdateRequested = true;
-        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LOCATION, 0);
+        mHandler.sendEmptyMessageDelayed(MSG_REFRESH_LOCATION, 5000);
     }
 
     synchronized public void stopQueryDriverLocationUpdates() {
@@ -81,7 +81,7 @@ public class NearbyDrivers {
         ParseGeoPoint userLocation = new ParseGeoPoint(mLocation.latitude, mLocation.longitude);
         ParseQuery<User> query = ParseQuery.getQuery(User.class);
         query.whereEqualTo(User.ROLE, User.DRIVER_ROLE);
-        query.whereEqualTo(User.STATE, "active");
+        query.whereEqualTo(User.STATE, "Active");
         query.whereWithinMiles("currentLocation", userLocation, mMiles);
         query.findInBackground(new FindCallback<User>() {
             public void done(List<User> objects, ParseException e) {

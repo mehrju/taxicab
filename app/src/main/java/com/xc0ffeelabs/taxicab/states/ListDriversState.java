@@ -70,9 +70,9 @@ public class ListDriversState implements State {
 
     private void initialize() {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fm_controls, ControlsFragment.newInstance(), "controls");
+        ft.replace(R.id.fm_controls, ControlsFragment.getInstance(), "controls");
         ft.commit();
-        ControlsFragment.newInstance().setControlsInteraction(new ControlsFragment.ControlsInteraction() {
+        ControlsFragment.getInstance().setControlsInteraction(new ControlsFragment.ControlsInteraction() {
             @Override
             public void onPickupButtonClicked() {
                 requestToPickup();
@@ -83,7 +83,7 @@ public class ListDriversState implements State {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
                 mUserLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 10);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 12);
                 setUserMarker();
                 mMap.moveCamera(cameraUpdate);
                 startLocationUpdates();
@@ -150,10 +150,11 @@ public class ListDriversState implements State {
         mNearbyDrivers.setQueryDriversCallback(new NearbyDrivers.QueryDriversCallback() {
             @Override
             public void onDriverLocationUpdate(final List<User> users) {
-                if (false) {
-                    /* TODO: Fix this */
-                    //Toast.makeText(mActivity, "No nearby drivers found", Toast.LENGTH_SHORT).show();
+                if (users.size() <= 0) {
+                    ControlsFragment.getInstance().setPickupEnabled(false);
+                    addDriverMarkers(users);
                 } else {
+                    ControlsFragment.getInstance().setPickupEnabled(true);
                     addDriverMarkers(users);
                     if (mSortRequested) {
                         TravelTime.compute(mUserLocation, users, new TravelTime.TravelTimeComputed() {
@@ -181,7 +182,7 @@ public class ListDriversState implements State {
 
     private void displayAproximateTime(String text) {
         if (mSortedUsers != null && !mSortedUsers.isEmpty()) {
-            ControlsFragment.newInstance().setApprTime(text);
+            ControlsFragment.getInstance().setApprTime(text);
         }
     }
 

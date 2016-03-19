@@ -26,7 +26,7 @@ public class ControlsFragment extends Fragment {
     @Bind(R.id.btn_pickup) Button mPickupBtn;
     @Bind(R.id.tv_apprTime) TextView mApprTimeText;
 
-    public static ControlsFragment newInstance() {
+    public static ControlsFragment getInstance() {
         if (mControlsFragment == null) {
             mControlsFragment= new ControlsFragment();
         }
@@ -61,6 +61,14 @@ public class ControlsFragment extends Fragment {
         if (!TextUtils.isEmpty(time)) {
             String formattedStr = getContext().getString(R.string.appr_time, time);
             mApprTimeText.setText(formattedStr);
+        }
+    }
+
+    public void setPickupEnabled(boolean enabled) {
+        if (enabled) {
+            mPickupBtn.setEnabled(true);
+        } else {
+            mPickupBtn.setEnabled(false);
         }
     }
 }
