@@ -7,4 +7,5 @@ import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 public interface State {
     void enterState(MapsActivity activity, Bundle data);
     void exitState();
+    StateManager.States getState();
 }

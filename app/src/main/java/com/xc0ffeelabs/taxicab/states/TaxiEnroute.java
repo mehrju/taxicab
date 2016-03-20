@@ -50,14 +50,17 @@ public class TaxiEnroute implements State {
         public static final String ENROUTE_DATA = "enrouteData";
 
         LatLng mUserLocation;
+        LatLng mDriverStartLoc;
         String mDriverId;
 
         public TaxiEnrouteData() {
         }
 
         public TaxiEnrouteData(LatLng userLocation,
+                               LatLng driverStart,
                                String driverId) {
             mUserLocation = userLocation;
+            mDriverStartLoc = driverStart;
             mDriverId = driverId;
         }
     }
@@ -173,7 +176,7 @@ public class TaxiEnroute implements State {
         LatLngBounds bounds = builder.build();
         int padding  = (int) mActivity.getResources().getDimension(R.dimen.map_offset);
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.animateCamera(cu);
+        mMap.moveCamera(cu);
         showRoute();
         updateDriverLocation();
     }
@@ -213,7 +216,7 @@ public class TaxiEnroute implements State {
     }
 
     private void showRoute() {
-        new GMapV2Direction(mDriverLocation, mUserLocation, new GMapV2Direction.RouteReady() {
+        new GMapV2Direction(mEnrouteData.mDriverStartLoc, mUserLocation, new GMapV2Direction.RouteReady() {
             @Override
             public void onRouteReady(Document document) {
                 drawRoute(document);
@@ -274,4 +277,8 @@ public class TaxiEnroute implements State {
         mDriverMarker.setPosition(mDriverLocation);
     }
 
+    @Override
+    public StateManager.States getState() {
+        return StateManager.States.TaxiEnroute;
+    }
 }

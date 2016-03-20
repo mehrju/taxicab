@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -13,6 +14,9 @@ import com.xc0ffeelabs.taxicab.models.Location;
 import com.xc0ffeelabs.taxicab.models.User;
 
 import org.parceler.Parcels;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class StateManager {
 
@@ -69,18 +73,24 @@ public class StateManager {
                 startState(States.ListDriver, null);
                 break;
             case WaitingDriver:
+                List<ParseObject> objects = new LinkedList<>();
                 final Location location = user.getPickUpLocation();
-                location.fetchInBackground(new GetCallback<ParseObject>() {
+                final Location driverStartLoc = user.getDriverStartLocation();
+                objects.add(location);
+                objects.add(driverStartLoc);
+                ParseObject.fetchAllInBackground(objects, new FindCallback<ParseObject>() {
                     @Override
-                    public void done(ParseObject object, ParseException e) {
-                        if (e != null) {
-                            Log.d(TAG, "Something went wrong e = " + e);
-                        } else {
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if (e == null) {
                             Bundle bundle = new Bundle();
                             TaxiEnroute.TaxiEnrouteData data = new TaxiEnroute.TaxiEnrouteData(
-                                    new LatLng(location.getLatitude(), location.getLongitude()), user.getDriverId());
+                                    new LatLng(location.getLatitude(), location.getLongitude()),
+                                    new LatLng(driverStartLoc.getLatitude(), driverStartLoc.getLongitude()),
+                                    user.getDriverId());
                             bundle.putParcelable(TaxiEnroute.TaxiEnrouteData.ENROUTE_DATA, Parcels.wrap(data));
                             startState(States.TaxiEnroute, bundle);
+                        } else {
+                            Log.d("NAYAN", "Something wrong while fetching");
                         }
                     }
                 });
@@ -88,6 +98,11 @@ public class StateManager {
     }
 
     public void startState(States state, Bundle data) {
+
+        if (mCurrentState != null && state == mCurrentState.getState()) {
+            return;
+        }
+
         if (mCurrentState != null) {
             mCurrentState.exitState();
         }

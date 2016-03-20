@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.FunctionCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -122,10 +123,32 @@ public class PickupRequestedState implements State {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    initiateTrip();
+                    updateDriverStartLocation(mDriverIds.get(0));
                 } else {
                     Log.d(TAG, "Saving failed");
                 }
+            }
+        });
+    }
+
+    private void updateDriverStartLocation(final String driverId) {
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.getInBackground(driverId, new GetCallback<ParseUser>() {
+            @Override
+            public void done(ParseUser object, ParseException e) {
+                User user = (User) ParseUser.getCurrentUser();
+                ParseGeoPoint startLocation = object.getParseGeoPoint(User.CURRENT_LOCATION);
+                LatLng pnt = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+                user.setDriverStartLocation(pnt, new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            initiateTrip();
+                        } else {
+                            Log.d(TAG, "Saving failed");
+                        }
+                    }
+                });
             }
         });
     }
@@ -149,7 +172,7 @@ public class PickupRequestedState implements State {
                 if (e == null) {
                     String status = object.getString("status");
                     if (status.equals("confirmed")) {
-                        tripConfirmed(object.getParseObject("driver"));
+                        fetchDataForTripConfirm(object.getParseObject("driver"));
                     } else {
                         retry(objectId);
                     }
@@ -187,10 +210,25 @@ public class PickupRequestedState implements State {
                 .create().show();
     }
 
+    private void fetchDataForTripConfirm(ParseObject driver) {
+        driver.fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    tripConfirmed(object);
+                } else {
+                    Log.d("NAYAN", "Something went wrong!");
+                }
+            }
+        });
+    }
+
     private void tripConfirmed(ParseObject driver) {
         Bundle data = new Bundle();
+        ParseGeoPoint pnt = driver.getParseGeoPoint(User.CURRENT_LOCATION);
+        LatLng driverStart = new LatLng(pnt.getLatitude(), pnt.getLongitude());
         TaxiEnroute.TaxiEnrouteData enrouteData =
-                new TaxiEnroute.TaxiEnrouteData(mUserLocation, driver.getObjectId());
+                new TaxiEnroute.TaxiEnrouteData(mUserLocation, driverStart, driver.getObjectId());
         data.putParcelable(TaxiEnroute.TaxiEnrouteData.ENROUTE_DATA, Parcels.wrap(enrouteData));
         TaxiCabApplication.getStateManager().startState(StateManager.States.TaxiEnroute, data);
     }
@@ -217,5 +255,10 @@ public class PickupRequestedState implements State {
                     throw new UnsupportedOperationException("Can't handle : " + msg.what);
             }
         }
+    }
+
+    @Override
+    public StateManager.States getState() {
+        return StateManager.States.TripRequested;
     }
 }

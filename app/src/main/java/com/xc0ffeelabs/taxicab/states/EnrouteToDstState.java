@@ -249,4 +249,8 @@ public class EnrouteToDstState implements State {
         mDriverMarker.setPosition(mDriverLocation);
     }
 
+    @Override
+    public StateManager.States getState() {
+        return StateManager.States.DestEnroute;
+    }
 }

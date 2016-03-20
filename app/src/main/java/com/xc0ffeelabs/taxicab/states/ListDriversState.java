@@ -218,4 +218,9 @@ public class ListDriversState implements State {
         }
         mMarkerMap.clear();
     }
+
+    @Override
+    public StateManager.States getState() {
+        return StateManager.States.ListDriver;
+    }
 }

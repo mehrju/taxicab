@@ -27,6 +27,7 @@ public class User extends ParseUser {
     public static final String CURRENT_LOCATION = "currentLocation";
     public static final String STATE = "state";
     public static final String PICKUP_LOCATION = "pickUpLocation";
+    public static final String DRIVER_START_LOCATION = "driverStartLocation";
 
     public static final String USER_ROLE = "user";
     public static final String DRIVER_ROLE = "driver";
@@ -143,5 +144,17 @@ public class User extends ParseUser {
 
     public Location getPickUpLocation() {
         return  (Location) get(PICKUP_LOCATION);
+    }
+
+    public void setDriverStartLocation(LatLng location, final SaveCallback callback) {
+        Location pnt = new Location();
+        pnt.setLatitude(location.latitude);
+        pnt.setLongitude(location.longitude);
+        put(DRIVER_START_LOCATION, pnt);
+        saveInBackground(callback);
+    }
+
+    public Location getDriverStartLocation() {
+        return  (Location) get(DRIVER_START_LOCATION);
     }
 }
