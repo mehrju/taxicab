@@ -114,6 +114,11 @@ public class StateManager {
                     }
                 });
                 break;
+            case DstReached:
+                startState(States.DestArrived, null);
+                break;
+            default:
+                throw new UnsupportedOperationException("Can't handle statee = " + state);
         }
     }
 
@@ -139,6 +144,9 @@ public class StateManager {
                 break;
             case DestEnroute:
                 mCurrentState = EnrouteToDstState.getInstance();
+                break;
+            case DestArrived:
+                mCurrentState = DestReached.getInstance();
                 break;
             default:
                 throw new UnsupportedOperationException("No such state");

@@ -37,4 +37,5 @@
     <string name="driver_arrived_msg">Driver has arrived. Please find him</string>
     <string name="dst_arrived">You have reached</string>
     <string name="dst_arrived_msg">Thank for riding with us. Do NOT forget to pay. And visit us again</string>
+    <string name="rate_cst">You have arrived. Please rate customer</string>
 </resources>
