@@ -125,11 +125,23 @@ public class User extends ParseUser {
         put("state", state.toString());
     }
 
+    public void setDriverId(String id) {
+        put("driverId", id);
+    }
+
+    public String getDriverId() {
+        return getString("driverId");
+    }
+
     public void setPickupLocation(LatLng location, final SaveCallback callback) {
         Location pnt = new Location();
         pnt.setLatitude(location.latitude);
         pnt.setLongitude(location.longitude);
         put(PICKUP_LOCATION, pnt);
         saveInBackground(callback);
+    }
+
+    public Location getPickUpLocation() {
+        return  (Location) get(PICKUP_LOCATION);
     }
 }

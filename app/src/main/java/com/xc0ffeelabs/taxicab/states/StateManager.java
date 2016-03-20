@@ -3,11 +3,16 @@ package com.xc0ffeelabs.taxicab.states;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
+import com.xc0ffeelabs.taxicab.models.Location;
 import com.xc0ffeelabs.taxicab.models.User;
+
+import org.parceler.Parcels;
 
 public class StateManager {
 
@@ -57,12 +62,28 @@ public class StateManager {
         });
     }
 
-    private void switchToDefaultState(User user) {
+    private void switchToDefaultState(final User user) {
         User.UserStates state = user.getUserState();
         switch (state) {
             case Online:
                 startState(States.ListDriver, null);
                 break;
+            case WaitingDriver:
+                final Location location = user.getPickUpLocation();
+                location.fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e != null) {
+                            Log.d(TAG, "Something went wrong e = " + e);
+                        } else {
+                            Bundle bundle = new Bundle();
+                            TaxiEnroute.TaxiEnrouteData data = new TaxiEnroute.TaxiEnrouteData(
+                                    new LatLng(location.getLatitude(), location.getLongitude()), user.getDriverId());
+                            bundle.putParcelable(TaxiEnroute.TaxiEnrouteData.ENROUTE_DATA, Parcels.wrap(data));
+                            startState(States.TaxiEnroute, bundle);
+                        }
+                    }
+                });
         }
     }
 

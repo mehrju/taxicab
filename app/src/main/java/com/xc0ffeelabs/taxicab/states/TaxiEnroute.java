@@ -128,6 +128,8 @@ public class TaxiEnroute implements State {
     private void updateStateInServer() {
         User user = (User) ParseUser.getCurrentUser();
         user.setUserState(User.UserStates.WaitingDriver);
+        user.setDriverId(mEnrouteData.mDriverId);
+        user.saveInBackground();
     }
 
     private void addUserMarker() {
