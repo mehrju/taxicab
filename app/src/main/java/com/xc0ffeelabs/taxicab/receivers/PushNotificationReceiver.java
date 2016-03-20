@@ -1,11 +1,13 @@
 package com.xc0ffeelabs.taxicab.receivers;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.xc0ffeelabs.taxicab.R;
@@ -44,10 +46,11 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                     String key = (String) itr.next();
                     String value = json.getString(key);
                     Log.d(TAG, "..." + key + " => " + value);
+                    JSONObject valueJson = new JSONObject(value);
                     // Extract custom push data
                     if (key.equals("customdata")) {
                         // create a local notification
-                        createNotification(context, value);
+                        createNotification(context, valueJson);
                     } else if (key.equals("launch")) {
                         // Handle push notification by invoking activity directly
                         launchSomeActivity(context, value);
@@ -62,15 +65,32 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         }
     }
 
-    public static final int NOTIFICATION_ID = 45;
     // Create a local dashboard notification to tell user about the event
     // See: http://guides.codepath.com/android/Notifications
-    private void createNotification(Context context, String datavalue) {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setSmallIcon(
-                R.drawable.ic_pin_black_18dp).setContentTitle("Notification: " + datavalue).setContentText("Pushed!");
-        NotificationManager mNotificationManager = (NotificationManager) context
+    private void createNotification(Context context, JSONObject valueJson) {
+        Intent notificationIntent = new Intent(context, MapsActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(context,
+                (int)System.currentTimeMillis(), notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationManager nm = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        try {
+            builder.setContentIntent(contentIntent)
+                    .setSmallIcon(R.drawable.ic_pin_black_18dp)
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .setContentTitle(valueJson.getString("title"))
+                    .setContentText(valueJson.getString("text"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Notification n = builder.build();
+
+        n.defaults |= Notification.DEFAULT_ALL;
+        nm.notify(0, n);
     }
 
     // Handle push notification by invoking activity directly
