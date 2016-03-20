@@ -3,11 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_bg"
     tools:context=".activities.TaxiCabMainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <ImageView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:layout_centerInParent="true"/>
+        android:scaleType="fitXY"
+        android:src="@drawable/checker"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/checker"/>
 </RelativeLayout>
