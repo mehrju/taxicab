@@ -58,7 +58,7 @@ public class ControlsFragment extends Fragment {
     }
 
     public void setApprTime(String time) {
-        if (!TextUtils.isEmpty(time)) {
+        if (!TextUtils.isEmpty(time) && getContext() != null) {
             String formattedStr = getContext().getString(R.string.appr_time, time);
             mApprTimeText.setText(formattedStr);
         }
@@ -69,6 +69,7 @@ public class ControlsFragment extends Fragment {
             mPickupBtn.setEnabled(true);
         } else {
             mPickupBtn.setEnabled(false);
+            mApprTimeText.setText("--");
         }
     }
 }
