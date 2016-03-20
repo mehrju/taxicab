@@ -30,7 +30,6 @@ import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 import com.xc0ffeelabs.taxicab.fragments.TaxiEnrouteFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.GMapV2Direction;
-import com.xc0ffeelabs.taxicab.stubs.NavigateDriverToUserStub;
 
 import org.parceler.Parcel;
 import org.parceler.Parcels;
@@ -167,14 +166,6 @@ public class TaxiEnroute implements State {
         mMap.animateCamera(cu);
         showRoute();
         updateDriverLocation();
-
-        /* TODO: Remove this for final app */
-        new NavigateDriverToUserStub(mDriverLocation, mUserLocation, mDriver, new NavigateDriverToUserStub.DriverArrived() {
-            @Override
-            public void onDriverArrived() {
-                moveToDestState();
-            }
-        }).run();
     }
 
     private void moveToDestState() {
