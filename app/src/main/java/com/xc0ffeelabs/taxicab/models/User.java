@@ -4,9 +4,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 @ParseClassName("_User")
 public class User extends ParseUser {
+
+    public enum UserStates {
+        Online,
+        WaitingDriver,
+        DriverArrived,
+        EnrouteDest
+    }
 
     public static final String ROLE = "role";
     public static final String NAME = "name";
@@ -16,6 +24,7 @@ public class User extends ParseUser {
     public static final String CAR_NUMBER = "carNumber";
     public static final String CURRENT_LOCATION = "currentLocation";
     public static final String STATE = "state";
+    public static final String PICKUP_LOCATION = "pickUpLocation";
 
     public static final String USER_ROLE = "user";
     public static final String DRIVER_ROLE = "driver";
@@ -100,5 +109,19 @@ public class User extends ParseUser {
 
     public void setTravelTime(long travelTime) {
         this.travelTime = travelTime;
+    }
+
+    public String getUserState() {
+        return getString("state");
+    }
+
+    public void setUserState(UserStates state) {
+        put("state", state);
+    }
+
+    public void setPickupLocation(LatLng location, final SaveCallback callback) {
+        Location pnt = new Location(location.latitude, location.longitude);
+        put(PICKUP_LOCATION, pnt);
+        saveInBackground(callback);
     }
 }

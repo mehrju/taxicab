@@ -15,10 +15,13 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 import com.xc0ffeelabs.taxicab.fragments.TripRequested;
+import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.ParseEndPoints;
 
 import org.parceler.Parcel;
@@ -35,6 +38,7 @@ public class PickupRequestedState implements State {
     private static final int MAX_WAIT = 60; // in sec
     private static final int MAX_RETRY = MAX_WAIT / 5;
     private static final String TRIP_OBJECT_ID = "tripObjectId";
+    private static final String TAG = PickupRequestedState.class.getSimpleName();
 
     private int mRetryCnt = 0;
 
@@ -91,6 +95,10 @@ public class PickupRequestedState implements State {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fm_controls, TripRequested.newInstance(), "controls");
         ft.commit();
+        updatePickupLocation();
+    }
+
+    private void initiateTrip() {
         ParseEndPoints.initiateTrip(mUserId, mDriverIds, new FunctionCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
@@ -105,13 +113,21 @@ public class PickupRequestedState implements State {
                             Log.d("NAYAN", "Something went wrong");
                         }
                     }
-                });/*
+                });
+            }
+        });
+    }
+
+    private void updatePickupLocation() {
+        User user = (User) ParseUser.getCurrentUser();
+        user.setPickupLocation(mUserLocation, new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
                 if (e == null) {
-                    statusChangeMonitor(object);
+                    initiateTrip();
                 } else {
-                    Toast.makeText(mActivity, "Sorry, something went wrong while booking. Please try again",
-                            Toast.LENGTH_SHORT).show();
-                }*/
+                    Log.d(TAG, "Saving failed");
+                }
             }
         });
     }

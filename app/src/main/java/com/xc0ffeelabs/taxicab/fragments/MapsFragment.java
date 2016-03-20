@@ -25,6 +25,8 @@ public class MapsFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = "MapsFragment";
+
     public interface MapReady {
         void onMapReady(GoogleMap map, GoogleApiClient apiClient);
     }
