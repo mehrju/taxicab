@@ -69,6 +69,14 @@
 
         <service android:name="com.parse.PushService" />
 
+        <receiver android:name="com.xc0ffeelabs.taxicab.receivers.IntentToLaunchMapReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.xc0ffeelabs.taxicabdriver.INTENT_TO_LAUNCH_MAP" />
+                <category android:name="com.xc0ffeelabs.taxicab" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

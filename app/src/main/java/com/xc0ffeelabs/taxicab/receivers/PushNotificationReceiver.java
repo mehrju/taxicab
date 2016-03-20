@@ -8,10 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
+import com.xc0ffeelabs.taxicab.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +26,8 @@ import java.util.Iterator;
 public class PushNotificationReceiver extends BroadcastReceiver {
     private static final String TAG = "MyCustomReceiver";
     public static final String intentAction = "com.parse.push.intent.RECEIVE";
+    public static final String REQUEST_LAUNCH_MAP = "com.xc0ffeelabs.taxicab.LAUNCH_MAP";
+    public static final String INTENT_TO_LAUNCH_MAP = "com.xc0ffeelabs.taxicabdriver.INTENT_TO_LAUNCH_MAP";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -50,7 +57,7 @@ public class PushNotificationReceiver extends BroadcastReceiver {
                     // Extract custom push data
                     if (key.equals("customdata")) {
                         // create a local notification
-                        createNotification(context, valueJson);
+                        setupTripState(context, valueJson);
                     } else if (key.equals("launch")) {
                         // Handle push notification by invoking activity directly
                         launchSomeActivity(context, value);
@@ -65,36 +72,61 @@ public class PushNotificationReceiver extends BroadcastReceiver {
         }
     }
 
-    // Create a local dashboard notification to tell user about the event
-    // See: http://guides.codepath.com/android/Notifications
-    private void createNotification(Context context, JSONObject valueJson) {
-        Intent notificationIntent = new Intent(context, MapsActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(context,
-                (int)System.currentTimeMillis(), notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-
-        NotificationManager nm = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+    private void setupTripState(final Context context, final JSONObject valueJson) {
         try {
+            String type = valueJson.getString("type");
+            if (TextUtils.isEmpty(type)) {
+                Log.e(TAG, "Type is not set. Return");
+                return;
+            }
+            User.UserStates state;
+            if (type.equalsIgnoreCase("taxiArrived")) {
+                state = User.UserStates.EnrouteDest;
+            } else {
+                state = User.UserStates.DstReached;
+            }
+            User user = (User) ParseUser.getCurrentUser();
+            user.setUserState(state);
+            user.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    createNotification(context, valueJson);
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createNotification(Context context, JSONObject valueJson) {
+        try {
+            Intent notificationIntent = new Intent(INTENT_TO_LAUNCH_MAP);
+
+            PendingIntent contentIntent = PendingIntent.getBroadcast(context,
+                    (int) System.currentTimeMillis(),
+                    notificationIntent,
+                    Intent.FILL_IN_DATA);
+
+            NotificationManager nm = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setContentIntent(contentIntent)
                     .setSmallIcon(R.drawable.ic_pin_black_18dp)
                     .setWhen(System.currentTimeMillis())
                     .setAutoCancel(true)
                     .setContentTitle(valueJson.getString("title"))
                     .setContentText(valueJson.getString("text"));
+
+            Notification n = builder.build();
+
+            n.defaults |= Notification.DEFAULT_ALL;
+            nm.notify(0, n);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Notification n = builder.build();
-
-        n.defaults |= Notification.DEFAULT_ALL;
-        nm.notify(0, n);
     }
 
-    // Handle push notification by invoking activity directly
-    // See: http://guides.codepath.com/android/Using-Intents-to-Create-Flows
     private void launchSomeActivity(Context context, String datavalue) {
         Intent pupInt = new Intent(context, MapsActivity.class);
         pupInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

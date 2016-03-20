@@ -28,7 +28,6 @@ import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.fragments.EnrouteToDestFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.GMapV2Direction;
-import com.xc0ffeelabs.taxicab.stubs.NavigateDriverToUserStub;
 
 import org.parceler.Parcel;
 import org.parceler.Parcels;
@@ -71,7 +70,7 @@ public class EnrouteToDstState implements State {
     private Marker mDriverMarker;
     private User mDriver;
     private Handler mHandler = new MyHandler(Looper.getMainLooper());
-    final private LatLng mDest = new LatLng(37.402601, -122.035755);
+    final private LatLng mDest = new LatLng(37.4064495, -121.9439531);
 
     public static EnrouteToDstState getInstance() {
         if (mTaxiEnroute == null) {
@@ -136,22 +135,9 @@ public class EnrouteToDstState implements State {
         LatLngBounds bounds = builder.build();
         int padding  = (int) mActivity.getResources().getDimension(R.dimen.map_offset);
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        mMap.animateCamera(cu);
+        mMap.moveCamera(cu);
         showRoute(mUserLocation, endLocation);
         updateDriverLocation();
-
-        /* TODO: Remove this for final app */
-        new NavigateDriverToUserStub(mUserLocation, endLocation, mDriver, new NavigateDriverToUserStub.DriverArrived() {
-            @Override
-            public void onDriverArrived() {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showDriverReached();
-                    }
-                });
-            }
-        }).run();
     }
 
     private void showDriverReached() {

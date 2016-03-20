@@ -1,15 +1,20 @@
 package com.xc0ffeelabs.taxicab.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,6 +24,7 @@ import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
+import com.xc0ffeelabs.taxicab.receivers.PushNotificationReceiver;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +38,16 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     private ActionBarDrawerToggle mDrawerToggle;
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("NAYAN", "On Receive of broadcast");
+            Intent mapsIntent = new Intent(context, MapsActivity.class);
+            mapsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(mapsIntent);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +69,9 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         mapsFragment.setMapReadyListener(this);
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
+                new IntentFilter(PushNotificationReceiver.REQUEST_LAUNCH_MAP));
     }
 
     private void registerUserWithParseInstallation() {
@@ -139,5 +158,11 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
 
     public GoogleMap getMap() {
         return mMap;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 }

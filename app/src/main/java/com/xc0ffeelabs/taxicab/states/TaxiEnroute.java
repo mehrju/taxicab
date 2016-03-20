@@ -172,7 +172,7 @@ public class TaxiEnroute implements State {
     private void zoomCamera() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(mUserLocation);
-        builder.include(mDriverLocation);
+        builder.include(mEnrouteData.mDriverStartLoc);
         LatLngBounds bounds = builder.build();
         int padding  = (int) mActivity.getResources().getDimension(R.dimen.map_offset);
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);

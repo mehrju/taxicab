@@ -14,8 +14,8 @@ public class User extends ParseUser {
     public enum UserStates {
         Online,
         WaitingDriver,
-        DriverArrived,
-        EnrouteDest
+        EnrouteDest,
+        DstReached
     }
 
     public static final String ROLE = "role";

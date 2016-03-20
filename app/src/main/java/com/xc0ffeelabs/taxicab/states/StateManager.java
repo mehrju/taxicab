@@ -90,10 +90,30 @@ public class StateManager {
                             bundle.putParcelable(TaxiEnroute.TaxiEnrouteData.ENROUTE_DATA, Parcels.wrap(data));
                             startState(States.TaxiEnroute, bundle);
                         } else {
-                            Log.d("NAYAN", "Something wrong while fetching");
+                            Log.d(TAG, "Something wrong while fetching");
                         }
                     }
                 });
+                break;
+            case EnrouteDest:
+                final Location userLocation = user.getPickUpLocation();
+                userLocation.fetchInBackground(new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e != null) {
+                            Log.d(TAG, "Something went wrong!");
+                        } else {
+                            Bundle bundle = new Bundle();
+                            EnrouteToDstState.EnrouteToDstData data = new EnrouteToDstState.EnrouteToDstData(
+                                    new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
+                                    user.getDriverId()
+                            );
+                            bundle.putParcelable(EnrouteToDstState.EnrouteToDstData.ENROUTE_DATA, Parcels.wrap(data));
+                            startState(States.DestEnroute, bundle);
+                        }
+                    }
+                });
+                break;
         }
     }
 
