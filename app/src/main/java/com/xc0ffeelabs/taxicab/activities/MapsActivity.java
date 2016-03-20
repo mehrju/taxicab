@@ -19,7 +19,6 @@ import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
-import com.xc0ffeelabs.taxicab.states.StateManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -131,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     public void onMapReady(GoogleMap map, GoogleApiClient apiClient) {
         mMap = map;
         mApiClient = apiClient;
-        TaxiCabApplication.getStateManager().startState(StateManager.States.ListDriver, null);
+        TaxiCabApplication.getStateManager().startDefaultState();
     }
 
     public GoogleApiClient getApiClient() {

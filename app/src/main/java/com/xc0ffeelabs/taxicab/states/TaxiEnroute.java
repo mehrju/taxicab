@@ -24,6 +24,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
@@ -120,6 +121,13 @@ public class TaxiEnroute implements State {
 
         addUserMarker();
         fetchDriverDetails();
+
+        updateStateInServer();
+    }
+
+    private void updateStateInServer() {
+        User user = (User) ParseUser.getCurrentUser();
+        user.setUserState(User.UserStates.WaitingDriver);
     }
 
     private void addUserMarker() {

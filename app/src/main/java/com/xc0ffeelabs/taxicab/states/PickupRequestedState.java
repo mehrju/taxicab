@@ -102,15 +102,13 @@ public class PickupRequestedState implements State {
         ParseEndPoints.initiateTrip(mUserId, mDriverIds, new FunctionCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                Log.d("NAYAN", "Trip id = " + object.getObjectId());
                 object.fetchInBackground(new GetCallback<ParseObject>() {
                     @Override
                     public void done(ParseObject object, ParseException e) {
                         if (e == null) {
-                            Log.d("NAYAN", "trip id = " + object.getObjectId());
                             statusChangeMonitor(object);
                         } else {
-                            Log.d("NAYAN", "Something went wrong");
+                            Log.d(TAG, "Something went wrong while initiating trip");
                         }
                     }
                 });

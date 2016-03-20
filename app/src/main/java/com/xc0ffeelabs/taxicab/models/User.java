@@ -1,5 +1,7 @@
 package com.xc0ffeelabs.taxicab.models;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
@@ -111,16 +113,22 @@ public class User extends ParseUser {
         this.travelTime = travelTime;
     }
 
-    public String getUserState() {
-        return getString("state");
+    public UserStates getUserState() {
+        String state = getString("state");
+        if (TextUtils.isEmpty(state)) {
+            return UserStates.Online;
+        }
+        return UserStates.valueOf(state);
     }
 
     public void setUserState(UserStates state) {
-        put("state", state);
+        put("state", state.toString());
     }
 
     public void setPickupLocation(LatLng location, final SaveCallback callback) {
-        Location pnt = new Location(location.latitude, location.longitude);
+        Location pnt = new Location();
+        pnt.setLatitude(location.latitude);
+        pnt.setLongitude(location.longitude);
         put(PICKUP_LOCATION, pnt);
         saveInBackground(callback);
     }
