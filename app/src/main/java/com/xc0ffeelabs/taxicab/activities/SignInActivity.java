@@ -129,6 +129,7 @@ public class SignInActivity extends AppCompatActivity {
     private void signInSuccess() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 }

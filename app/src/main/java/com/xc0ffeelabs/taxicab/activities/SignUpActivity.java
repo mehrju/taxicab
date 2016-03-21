@@ -114,10 +114,17 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d(TAG, "User signed up!");
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
     private void signUpFailed() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

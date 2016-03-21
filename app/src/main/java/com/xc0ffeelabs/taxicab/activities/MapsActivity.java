@@ -46,6 +46,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
             Intent mapsIntent = new Intent(context, MapsActivity.class);
             mapsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(mapsIntent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     };
 
@@ -142,6 +143,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         TaxiCabApplication.getAccountManager().logoutUser();
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
 
@@ -164,5 +166,11 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     protected void onDestroy() {
         super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

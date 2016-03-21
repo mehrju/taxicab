@@ -43,6 +43,7 @@ public class NoPermissionActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_DEFAULT);
                 intent.setData(Uri.parse("package:" + getPackageName()));
                 startActivity(intent);
+
             }
         });
 

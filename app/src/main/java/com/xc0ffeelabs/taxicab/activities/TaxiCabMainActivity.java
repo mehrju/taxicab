@@ -32,6 +32,7 @@ public class TaxiCabMainActivity extends AppCompatActivity {
             if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(this, NoPermissionActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             } else {
                 initialize();
             }
@@ -60,6 +61,7 @@ public class TaxiCabMainActivity extends AppCompatActivity {
     private void showLoginActivity() {
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void showNoNetworkMessage() {
@@ -137,6 +139,7 @@ public class TaxiCabMainActivity extends AppCompatActivity {
         // Launch map activity here
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
