@@ -123,9 +123,24 @@ public class PickupRequestedState implements State {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    updateDriverStartLocation(mDriverIds.get(0));
+                    updateDestLocation();
                 } else {
                     Log.d(TAG, "Saving failed");
+                }
+            }
+        });
+    }
+
+    private void updateDestLocation() {
+        // Dest location is already. Ensure it's saved
+        User user = (User) ParseUser.getCurrentUser();
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    updateDriverStartLocation(mDriverIds.get(0));
+                } else {
+                    Log.d(TAG, "Wrong.. wrong.. " + e);
                 }
             }
         });

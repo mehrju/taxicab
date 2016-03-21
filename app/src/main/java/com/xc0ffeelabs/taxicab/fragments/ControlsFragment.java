@@ -2,21 +2,35 @@ package com.xc0ffeelabs.taxicab.fragments;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
+import com.xc0ffeelabs.taxicab.models.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ControlsFragment extends Fragment {
+
+    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final String TAG = ControlsFragment.class.getSimpleName();
 
     public interface ControlsInteraction {
         void onPickupButtonClicked();
@@ -58,8 +72,46 @@ public class ControlsFragment extends Fragment {
             }
         });
 
+        mDest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchPlacesAutoComplete();
+            }
+        });
+
         setApprTime("--");
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                mDest.setText(place.getName());
+                LatLng destLocation = place.getLatLng();
+                User user = (User) ParseUser.getCurrentUser();
+                user.setDestLocation(destLocation);
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Log.d(TAG, "Result cancelled");
+            }
+        }
+    }
+
+    private void launchPlacesAutoComplete() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(getActivity());
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.d(TAG, "exception e = " + e);
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.d(TAG, "Exception e = " + e);
+        }
     }
 
     public void setApprTime(String time) {

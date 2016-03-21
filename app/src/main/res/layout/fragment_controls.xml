@@ -96,6 +96,7 @@
                 android:id="@+id/et_dst"
                 android:hint="Enter destination"
                 android:singleLine="true"
+                android:editable="false"
                 style="@style/EditTextStyle"/>
 
         </LinearLayout>
