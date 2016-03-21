@@ -9,12 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:paddingBottom="30dp"
+        android:paddingBottom="36dp"
         android:paddingStart="15dp"
         android:paddingLeft="15dp"
         android:paddingEnd="15dp"
         android:paddingRight="15dp"
         android:alpha="0"
+        android:elevation="5dp"
         android:id="@+id/topControls">
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,6 +102,34 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_below="@id/topControls"
+        android:layout_marginTop="-28dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:id="@+id/btn_pickup"
+        android:elevation="7dp"
+        android:alpha="0">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/fab_pickup">
+        </View>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_taxi_white_36dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -110,13 +139,4 @@
         android:textColor="@android:color/black"
         android:layout_alignParentBottom="true"
         android:id="@+id/tv_apprTime"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Pick up"
-        android:layout_above="@id/tv_apprTime"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/btn_pickup"/>
-
 </RelativeLayout>

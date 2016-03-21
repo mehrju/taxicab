@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,7 +25,7 @@ public class ControlsFragment extends Fragment {
 
     private static ControlsFragment mControlsFragment = null;
 
-    @Bind(R.id.btn_pickup) Button mPickupBtn;
+    @Bind(R.id.btn_pickup) View mPickupBtn;
     @Bind(R.id.tv_apprTime) TextView mApprTimeText;
     @Bind(R.id.et_source) EditText mSource;
     @Bind(R.id.et_dst) EditText mDest;
@@ -80,10 +79,20 @@ public class ControlsFragment extends Fragment {
     }
 
     public void animateShowControls() {
-        AnimatorSet set = new AnimatorSet();
+        AnimatorSet set1 = new AnimatorSet();
         ObjectAnimator transition = ObjectAnimator.ofFloat(mTopControls, "y", -mTopControls.getHeight(), 0);
         ObjectAnimator fade = ObjectAnimator.ofFloat(mTopControls, "alpha", 0f, 1f);
-        set.playTogether(transition, fade);
+        set1.playTogether(transition, fade);
+
+        AnimatorSet set2 = new AnimatorSet();
+        ObjectAnimator fadeFab = ObjectAnimator.ofFloat(mPickupBtn, "alpha", 0f, 1f);
+        ObjectAnimator fabScaleX = ObjectAnimator.ofFloat(mPickupBtn, "scaleX", 0f, 1f);
+        ObjectAnimator fabScaleY = ObjectAnimator.ofFloat(mPickupBtn, "scaleU", 0f, 1f);
+        set2.playTogether(fadeFab, fabScaleX, fabScaleY);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(set1, set2);
+
         set.start();
     }
 
