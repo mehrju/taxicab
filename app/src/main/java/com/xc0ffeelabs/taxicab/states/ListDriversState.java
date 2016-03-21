@@ -1,6 +1,8 @@
 package com.xc0ffeelabs.taxicab.states;
 
+import android.location.Address;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
@@ -21,6 +23,7 @@ import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 import com.xc0ffeelabs.taxicab.fragments.ControlsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
+import com.xc0ffeelabs.taxicab.network.LocationDetails;
 import com.xc0ffeelabs.taxicab.network.NearbyDrivers;
 import com.xc0ffeelabs.taxicab.network.TravelTime;
 
@@ -83,6 +86,12 @@ public class ListDriversState implements State {
             Location location = LocationServices.FusedLocationApi.getLastLocation(mApiClient);
             if (location != null) {
                 mUserLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                new GetLocation(mUserLocation, new GetCallback() {
+                    @Override
+                    public void done() {
+                        ControlsFragment.getInstance().animateShowControls();
+                    }
+                }).execute();
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 12);
                 setUserMarker();
                 mMap.moveCamera(cameraUpdate);
@@ -135,6 +144,7 @@ public class ListDriversState implements State {
         mNearbyDrivers.setLocation(cameraPosition.target);
         mNearbyDrivers.getNow();
         mUserLocation = cameraPosition.target;
+        new GetLocation(mUserLocation, null).execute();
         mSortRequested = true;
         setUserMarker();
     }
@@ -222,5 +232,37 @@ public class ListDriversState implements State {
     @Override
     public StateManager.States getState() {
         return StateManager.States.ListDriver;
+    }
+
+    public interface GetCallback {
+        void done();
+    }
+
+    private class GetLocation extends AsyncTask<Void, Void, Address> {
+
+        private final LatLng mLocation;
+        private final GetCallback mListener;
+
+        public GetLocation(LatLng location, GetCallback listener) {
+            mLocation = location;
+            mListener = listener;
+        }
+
+        @Override
+        protected Address doInBackground(Void... params) {
+            return LocationDetails.getLocationDetails(mActivity, mLocation);
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            if (address == null || address.getAddressLine(0) == null) {
+                ControlsFragment.getInstance().setSourceLocation("--");
+            } else {
+                ControlsFragment.getInstance().setSourceLocation(address.getAddressLine(0));
+            }
+            if (mListener != null) {
+                mListener.done();
+            }
+        }
     }
 }

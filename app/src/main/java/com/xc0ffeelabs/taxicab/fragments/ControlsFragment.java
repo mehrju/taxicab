@@ -1,5 +1,7 @@
 package com.xc0ffeelabs.taxicab.fragments;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -7,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.xc0ffeelabs.taxicab.R;
@@ -25,6 +28,9 @@ public class ControlsFragment extends Fragment {
 
     @Bind(R.id.btn_pickup) Button mPickupBtn;
     @Bind(R.id.tv_apprTime) TextView mApprTimeText;
+    @Bind(R.id.et_source) EditText mSource;
+    @Bind(R.id.et_dst) EditText mDest;
+    @Bind(R.id.topControls) View mTopControls;
 
     public static ControlsFragment getInstance() {
         if (mControlsFragment == null) {
@@ -71,5 +77,21 @@ public class ControlsFragment extends Fragment {
             mPickupBtn.setEnabled(false);
             mApprTimeText.setText("--");
         }
+    }
+
+    public void animateShowControls() {
+        AnimatorSet set = new AnimatorSet();
+        ObjectAnimator transition = ObjectAnimator.ofFloat(mTopControls, "y", -mTopControls.getHeight(), 0);
+        ObjectAnimator fade = ObjectAnimator.ofFloat(mTopControls, "alpha", 0f, 1f);
+        set.playTogether(transition, fade);
+        set.start();
+    }
+
+    public void setSourceLocation(String source) {
+        mSource.setText(source);
+    }
+
+    public void setDestLocation(String dest) {
+        mDest.setText(dest);
     }
 }

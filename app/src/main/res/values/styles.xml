@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="EditTextStyle">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingEnd">30dp</item>
+        <item name="android:paddingRight">30dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>
