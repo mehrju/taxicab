@@ -239,4 +239,14 @@ public class EnrouteToDstState implements State {
     public StateManager.States getState() {
         return StateManager.States.DestEnroute;
     }
+
+    @Override
+    public void onTouchUp() {
+
+    }
+
+    @Override
+    public void onTouchDown() {
+
+    }
 }

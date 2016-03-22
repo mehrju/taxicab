@@ -153,4 +153,8 @@ public class StateManager {
         }
         mCurrentState.enterState(mAcitivity, data);
     }
+
+    public State getCurrentState() {
+        return mCurrentState;
+    }
 }

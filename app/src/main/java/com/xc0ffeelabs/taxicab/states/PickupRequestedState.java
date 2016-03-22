@@ -276,4 +276,14 @@ public class PickupRequestedState implements State {
     public StateManager.States getState() {
         return StateManager.States.TripRequested;
     }
+
+    @Override
+    public void onTouchUp() {
+
+    }
+
+    @Override
+    public void onTouchDown() {
+
+    }
 }

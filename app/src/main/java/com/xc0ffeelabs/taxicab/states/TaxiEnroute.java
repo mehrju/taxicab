@@ -281,4 +281,14 @@ public class TaxiEnroute implements State {
     public StateManager.States getState() {
         return StateManager.States.TaxiEnroute;
     }
+
+    @Override
+    public void onTouchUp() {
+
+    }
+
+    @Override
+    public void onTouchDown() {
+
+    }
 }

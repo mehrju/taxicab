@@ -17,7 +17,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 
@@ -35,9 +34,10 @@ public class MapsFragment extends Fragment implements
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 1;
 
-    private SupportMapFragment mMapFragment;
+    private TouchableMapFragment mMapFragment;
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
+    private OnTouchEvent mTouchEventListener;
 
     public MapsFragment() {
     }
@@ -62,8 +62,19 @@ public class MapsFragment extends Fragment implements
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mMapFragment = (SupportMapFragment)
+        mMapFragment = (TouchableMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map);
+        mMapFragment.setOnTouchListener(new TouchableMapFragment.OnTouchEvent() {
+            @Override
+            public void onMapTouchDown() {
+                mTouchEventListener.onMapTouchDown();
+            }
+
+            @Override
+            public void onMapTouchUp() {
+                mTouchEventListener.onMapTouchUp();
+            }
+        });
 
         setupMap();
     }
@@ -190,5 +201,14 @@ public class MapsFragment extends Fragment implements
             Toast.makeText(getContext(),
                     "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public interface OnTouchEvent {
+        void onMapTouchDown();
+        void onMapTouchUp();
+    }
+
+    public void setOnTouchListener(OnTouchEvent listener) {
+        mTouchEventListener = listener;
     }
 }

@@ -48,7 +48,6 @@ public class ListDriversState implements State {
     private MapsActivity mActivity;
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
-
     private static ListDriversState mListDriverState;
 
     public static ListDriversState getInstance() {
@@ -247,5 +246,15 @@ public class ListDriversState implements State {
                 mListener.done();
             }
         }
+    }
+
+    @Override
+    public void onTouchUp() {
+        ControlsFragment.getInstance().animateShowControls();
+    }
+
+    @Override
+    public void onTouchDown() {
+        ControlsFragment.getInstance().animateHideControls();
     }
 }

@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/map"
-        class="com.google.android.gms.maps.SupportMapFragment"
+        class="com.xc0ffeelabs.taxicab.fragments.TouchableMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </RelativeLayout>

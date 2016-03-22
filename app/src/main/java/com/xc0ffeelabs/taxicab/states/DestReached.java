@@ -9,7 +9,7 @@ import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.fragments.DestReachedFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 
-public class DestReached implements State {
+public class DestReached implements State{
 
     private static DestReached mDestReached;
 
@@ -59,5 +59,15 @@ public class DestReached implements State {
     @Override
     public StateManager.States getState() {
         return StateManager.States.DestArrived;
+    }
+
+    @Override
+    public void onTouchUp() {
+
+    }
+
+    @Override
+    public void onTouchDown() {
+
     }
 }

@@ -139,11 +139,29 @@ public class ControlsFragment extends Fragment {
         AnimatorSet set2 = new AnimatorSet();
         ObjectAnimator fadeFab = ObjectAnimator.ofFloat(mPickupBtn, "alpha", 0f, 1f);
         ObjectAnimator fabScaleX = ObjectAnimator.ofFloat(mPickupBtn, "scaleX", 0f, 1f);
-        ObjectAnimator fabScaleY = ObjectAnimator.ofFloat(mPickupBtn, "scaleU", 0f, 1f);
+        ObjectAnimator fabScaleY = ObjectAnimator.ofFloat(mPickupBtn, "scaleY", 0f, 1f);
         set2.playTogether(fadeFab, fabScaleX, fabScaleY);
 
         AnimatorSet set = new AnimatorSet();
         set.playSequentially(set1, set2);
+
+        set.start();
+    }
+
+    public void animateHideControls() {
+        AnimatorSet set1 = new AnimatorSet();
+        ObjectAnimator transition = ObjectAnimator.ofFloat(mTopControls, "y", 0, -mTopControls.getHeight());
+        ObjectAnimator fade = ObjectAnimator.ofFloat(mTopControls, "alpha", 1f, 0f);
+        set1.playTogether(transition, fade);
+
+        AnimatorSet set2 = new AnimatorSet();
+        ObjectAnimator fadeFab = ObjectAnimator.ofFloat(mPickupBtn, "alpha", 1f, 0f);
+        ObjectAnimator fabScaleX = ObjectAnimator.ofFloat(mPickupBtn, "scaleX", 1f, 0f);
+        ObjectAnimator fabScaleY = ObjectAnimator.ofFloat(mPickupBtn, "scaleY", 1f, 0f);
+        set2.playTogether(fadeFab, fabScaleX, fabScaleY);
+
+        AnimatorSet set = new AnimatorSet();
+        set.playSequentially(set2, set1);
 
         set.start();
     }

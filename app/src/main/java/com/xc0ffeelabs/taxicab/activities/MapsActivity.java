@@ -25,6 +25,7 @@ import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.receivers.PushNotificationReceiver;
+import com.xc0ffeelabs.taxicab.states.StateManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,6 +71,18 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         mapsFragment.setMapReadyListener(this);
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
+
+        mapsFragment.setOnTouchListener(new MapsFragment.OnTouchEvent() {
+            @Override
+            public void onMapTouchDown() {
+                StateManager.getInstance().getCurrentState().onTouchDown();
+            }
+
+            @Override
+            public void onMapTouchUp() {
+                StateManager.getInstance().getCurrentState().onTouchUp();
+            }
+        });
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
                 new IntentFilter(PushNotificationReceiver.REQUEST_LAUNCH_MAP));

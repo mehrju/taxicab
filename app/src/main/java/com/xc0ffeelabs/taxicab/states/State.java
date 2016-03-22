@@ -8,4 +8,6 @@ public interface State {
     void enterState(MapsActivity activity, Bundle data);
     void exitState();
     StateManager.States getState();
+    void onTouchUp();
+    void onTouchDown();
 }
