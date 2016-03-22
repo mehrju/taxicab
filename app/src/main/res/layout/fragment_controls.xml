@@ -140,4 +140,11 @@
         android:textColor="@android:color/black"
         android:layout_alignParentBottom="true"
         android:id="@+id/tv_apprTime"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_pin"
+        android:paddingBottom="48dp"/>
 </RelativeLayout>

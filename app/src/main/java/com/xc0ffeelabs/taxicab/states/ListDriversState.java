@@ -12,7 +12,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -42,7 +41,6 @@ public class ListDriversState implements State {
     private final static int REFRESH_INTERVAL = 10;
 
     private Map<String, Marker> mMarkerMap = new HashMap<>();
-    private Marker mUserMarker;
     private LatLng mUserLocation;
     private NearbyDrivers mNearbyDrivers;
     private volatile boolean mSortRequested = true;
@@ -93,7 +91,6 @@ public class ListDriversState implements State {
                     }
                 }).execute();
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 12);
-                setUserMarker();
                 mMap.moveCamera(cameraUpdate);
                 startLocationUpdates();
                 fetchNearByDrivers();
@@ -109,18 +106,6 @@ public class ListDriversState implements State {
             }
         } catch (SecurityException e) {
             throw e;
-        }
-    }
-
-    private void setUserMarker() {
-        if (mUserMarker == null) {
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(mUserLocation)
-                    .title("Me")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_black_48dp));
-            mUserMarker = mMap.addMarker(markerOptions);
-        } else {
-            mUserMarker.setPosition(mUserLocation);
         }
     }
 
@@ -146,7 +131,6 @@ public class ListDriversState implements State {
         mUserLocation = cameraPosition.target;
         new GetLocation(mUserLocation, null).execute();
         mSortRequested = true;
-        setUserMarker();
     }
 
     private void startLocationUpdates() {
@@ -221,7 +205,6 @@ public class ListDriversState implements State {
     public void exitState() {
         mNearbyDrivers.stopQueryDriverLocationUpdates();
         mMap.setOnCameraChangeListener(null);
-        mUserMarker.remove();
         Collection<Marker> driverMarkers = mMarkerMap.values();
         for (Marker marker : driverMarkers) {
             marker.remove();
