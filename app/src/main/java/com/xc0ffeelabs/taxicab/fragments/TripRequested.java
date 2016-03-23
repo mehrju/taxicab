@@ -1,5 +1,6 @@
 package com.xc0ffeelabs.taxicab.fragments;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -8,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.xc0ffeelabs.taxicab.R;
 
@@ -35,6 +38,27 @@ public class TripRequested extends Fragment {
         View view = inflater.inflate(R.layout.fragment_trip_requested, container, false);
 
         ButterKnife.bind(this, view);
+
+        view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
+                                       int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                int cx = 1300;
+                int cy = 200;
+
+                // get the hypothenuse so the radius is from one corner to the other
+                int radius = (int) Math.hypot(left, bottom);
+
+                Animator reveal = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    reveal = ViewAnimationUtils.createCircularReveal(v, cx, cy, 0, radius);
+                    reveal.setInterpolator(new DecelerateInterpolator(2f));
+                    reveal.setDuration(1500);
+                    reveal.start();
+                }
+            }
+        });
 
         return view;
     }
