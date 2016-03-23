@@ -16,8 +16,8 @@ import com.xc0ffeelabs.taxicab.states.StateManager;
 
 public class TaxiCabApplication extends Application {
 
-    private static final String APP_ID = "gotaxi";
-    private static final String PARSE_URL = "https://gotaxi.herokuapp.com/parse/";
+    private static final String APP_ID = "chariottaxi";
+    private static final String PARSE_URL = "https://chariottaxi.herokuapp.com/parse/";
 
     private static TaxiCabApplication mApp;
 

@@ -161,7 +161,7 @@ public class ControlsFragment extends Fragment {
         set2.playTogether(fadeFab, fabScaleX, fabScaleY);
 
         AnimatorSet set = new AnimatorSet();
-        set.playSequentially(set2, set1);
+        set.playTogether(set2, set1);
 
         set.start();
     }
