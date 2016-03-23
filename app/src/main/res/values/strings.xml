@@ -25,7 +25,7 @@
     <string name="no_permission">Not enough permission. Please grant location permission</string>
     <string name="settings">Settings</string>
     <string name="permission_needed">Permissions Required</string>
-    <string name="appr_time">Approximate time : %1$s </string>
+    <string name="appr_time">Approximate pick up time : %1$s </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

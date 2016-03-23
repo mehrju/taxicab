@@ -90,6 +90,8 @@ public class PickupRequestedState implements State {
         mUserLocation = pickupRequestData.mUserLocation;
         mDriverIds = pickupRequestData.mDriverIds;
         initialize();
+        mActivity.setTitle("Searching...");
+        mActivity.setIcon(R.drawable.ic_close_black_24dp);
     }
 
     private void initialize() {
@@ -250,7 +252,7 @@ public class PickupRequestedState implements State {
 
     @Override
     public void exitState() {
-
+        mActivity.setIcon(R.drawable.ic_menu_black_24dp);
     }
 
     private class MyHandler extends Handler {

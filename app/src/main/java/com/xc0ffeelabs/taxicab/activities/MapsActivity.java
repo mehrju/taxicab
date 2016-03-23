@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -39,6 +40,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     private ActionBarDrawerToggle mDrawerToggle;
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
+    private Drawable mLogo;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -59,6 +61,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
+        mLogo = mToolbar.getLogo();
 
         setupNavDrawer();
 
@@ -185,5 +188,17 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setTitle(String title) {
+        mToolbar.setTitle(title);
+    }
+
+    public void setIcon(int drawable) {
+        if (drawable == -1) {
+            mToolbar.setNavigationIcon(mLogo);
+        } else {
+            mToolbar.setNavigationIcon(drawable);
+        }
     }
 }

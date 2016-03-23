@@ -23,5 +23,18 @@
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
-
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:text="Cancel"
+        android:elevation="5dp"
+        android:background="@drawable/pb_drawable_yello"
+        android:fontFamily="sans-serif"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"/>
 </RelativeLayout>

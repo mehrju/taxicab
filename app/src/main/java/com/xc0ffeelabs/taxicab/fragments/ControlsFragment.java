@@ -79,7 +79,7 @@ public class ControlsFragment extends Fragment {
             }
         });
 
-        setApprTime("--");
+        setApprTime("--", false);
         return view;
     }
 
@@ -114,10 +114,12 @@ public class ControlsFragment extends Fragment {
         }
     }
 
-    public void setApprTime(String time) {
-        if (!TextUtils.isEmpty(time) && getContext() != null) {
+    public void setApprTime(String time, boolean raw) {
+        if (!raw && !TextUtils.isEmpty(time) && getContext() != null) {
             String formattedStr = getContext().getString(R.string.appr_time, time);
             mApprTimeText.setText(formattedStr);
+        } else {
+            mApprTimeText.setText("No nearby drivers found");
         }
     }
 
@@ -134,7 +136,9 @@ public class ControlsFragment extends Fragment {
         AnimatorSet set1 = new AnimatorSet();
         ObjectAnimator transition = ObjectAnimator.ofFloat(mTopControls, "y", -mTopControls.getHeight(), 0);
         ObjectAnimator fade = ObjectAnimator.ofFloat(mTopControls, "alpha", 0f, 1f);
-        set1.playTogether(transition, fade);
+        ObjectAnimator textAnim = ObjectAnimator.ofFloat(mApprTimeText, "Y",
+                mApprTimeText.getBottom(), mApprTimeText.getTop());
+        set1.playTogether(transition, fade, textAnim);
 
         AnimatorSet set2 = new AnimatorSet();
         ObjectAnimator fadeFab = ObjectAnimator.ofFloat(mPickupBtn, "alpha", 0f, 1f);
@@ -158,7 +162,9 @@ public class ControlsFragment extends Fragment {
         ObjectAnimator fadeFab = ObjectAnimator.ofFloat(mPickupBtn, "alpha", 1f, 0f);
         ObjectAnimator fabScaleX = ObjectAnimator.ofFloat(mPickupBtn, "scaleX", 1f, 0f);
         ObjectAnimator fabScaleY = ObjectAnimator.ofFloat(mPickupBtn, "scaleY", 1f, 0f);
-        set2.playTogether(fadeFab, fabScaleX, fabScaleY);
+        ObjectAnimator textAnim = ObjectAnimator.ofFloat(mApprTimeText, "Y",
+                mApprTimeText.getTop(), mApprTimeText.getBottom());
+        set2.playTogether(fadeFab, fabScaleX, fabScaleY, textAnim);
 
         AnimatorSet set = new AnimatorSet();
         set.playTogether(set2, set1);

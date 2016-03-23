@@ -55,6 +55,9 @@
                 android:text="1000 Enterprise way"
                 style="@style/EditTextStyle"
                 android:singleLine="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-light"
                 android:editable="false"/>
 
         </LinearLayout>
@@ -97,6 +100,9 @@
                 android:hint="Enter destination"
                 android:singleLine="true"
                 android:editable="false"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-light"
                 style="@style/EditTextStyle"/>
 
         </LinearLayout>
@@ -133,13 +139,16 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="@string/appr_time"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:background="@color/colorPrimary"
-        android:textColor="@android:color/black"
+        android:textColor="@color/grey"
         android:layout_alignParentBottom="true"
-        android:id="@+id/tv_apprTime"/>
+        android:id="@+id/tv_apprTime"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:elevation="5dp"/>
 
     <ImageView
         android:layout_width="wrap_content"

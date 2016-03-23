@@ -12,6 +12,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -124,7 +125,7 @@ public class ListDriversState implements State {
     }
 
     private void repositionCamera(CameraPosition cameraPosition) {
-        displayAproximateTime("--");
+        displayAproximateTime("--", false);
         mNearbyDrivers.setLocation(cameraPosition.target);
         mNearbyDrivers.getNow();
         mUserLocation = cameraPosition.target;
@@ -146,6 +147,7 @@ public class ListDriversState implements State {
                 if (users.size() <= 0) {
                     ControlsFragment.getInstance().setPickupEnabled(false);
                     addDriverMarkers(users);
+                    displayAproximateTime("No drivers found nearby", true);
                 } else {
                     ControlsFragment.getInstance().setPickupEnabled(true);
                     addDriverMarkers(users);
@@ -156,7 +158,7 @@ public class ListDriversState implements State {
                                 mSortedUsers.clear();
                                 mSortedUsers.addAll(users);
                                 if (drivers != null && !drivers.isEmpty()) {
-                                    displayAproximateTime(drivers.get(0).getTravelTimeText());
+                                    displayAproximateTime(drivers.get(0).getTravelTimeText(), false);
                                 }
                                 mSortRequested = false;
                             }
@@ -173,10 +175,8 @@ public class ListDriversState implements State {
         mNearbyDrivers.startQueryDriverLocationUpdates();
     }
 
-    private void displayAproximateTime(String text) {
-        if (mSortedUsers != null && !mSortedUsers.isEmpty()) {
-            ControlsFragment.getInstance().setApprTime(text);
-        }
+    private void displayAproximateTime(String text, boolean raw) {
+        ControlsFragment.getInstance().setApprTime(text, raw);
     }
 
     private void addDriverMarkers(List<User> drivers) {
@@ -184,7 +184,7 @@ public class ListDriversState implements State {
         for (User driver : drivers) {
             LatLng position = new LatLng(driver.getLocation().getLatitude(), driver.getLocation().getLongitude());
             if (!mMarkerMap.containsKey(driver.getObjectId())) {
-                MarkerOptions markerOptions = new MarkerOptions().position(position).title(driver.getName());
+                MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car_pin)).position(position).title(driver.getName());
                 Marker marker = mMap.addMarker(markerOptions);
                 mMarkerMap.put(driver.getObjectId(), marker);
             } else {
