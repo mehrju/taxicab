@@ -8,6 +8,7 @@ public class Location extends ParseObject {
 
     public static final String LATITUDE = "lat";
     public static final String LONGITUDE = "long";
+    public static final String LOCTEXT = "text";
 
     public Location() {
     }
@@ -20,6 +21,8 @@ public class Location extends ParseObject {
         put(LONGITUDE, longitude);
     }
 
+    public void setText(String text) { put(LOCTEXT, text); }
+
     public double getLatitude() {
         return getDouble(LATITUDE);
     }
@@ -27,4 +30,6 @@ public class Location extends ParseObject {
     public double getLongitude() {
         return getDouble(LONGITUDE);
     }
+
+    public String getText() { return getString(LOCTEXT); }
 }

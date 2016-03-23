@@ -135,10 +135,13 @@ public class User extends ParseUser {
         return getString("driverId");
     }
 
-    public void setPickupLocation(LatLng location, final SaveCallback callback) {
+    public void setPickupLocation(LatLng location, String text, final SaveCallback callback) {
         Location pnt = new Location();
         pnt.setLatitude(location.latitude);
         pnt.setLongitude(location.longitude);
+        if (text != null) {
+            pnt.setText(text);
+        }
         put(PICKUP_LOCATION, pnt);
         saveInBackground(callback);
     }

@@ -2,6 +2,7 @@ package com.xc0ffeelabs.taxicab.states;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +24,7 @@ import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 import com.xc0ffeelabs.taxicab.fragments.TripRequested;
 import com.xc0ffeelabs.taxicab.models.User;
+import com.xc0ffeelabs.taxicab.network.LocationDetails;
 import com.xc0ffeelabs.taxicab.network.ParseEndPoints;
 
 import org.parceler.Parcel;
@@ -121,7 +123,15 @@ public class PickupRequestedState implements State {
 
     private void updatePickupLocation() {
         User user = (User) ParseUser.getCurrentUser();
-        user.setPickupLocation(mUserLocation, new SaveCallback() {
+        Address address = LocationDetails.getLocationDetails(mActivity, mUserLocation);
+        String loc = null;
+        if (address != null && address.getAddressLine(0) != null) {
+            loc = address.getAddressLine(0);
+            if (address.getAddressLine(1) != null) {
+                loc += ", " + address.getAddressLine(1);
+            }
+        }
+        user.setPickupLocation(mUserLocation, loc, new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
