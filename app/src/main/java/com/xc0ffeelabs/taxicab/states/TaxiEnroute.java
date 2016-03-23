@@ -1,13 +1,11 @@
 package com.xc0ffeelabs.taxicab.states;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -27,7 +25,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
-import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
 import com.xc0ffeelabs.taxicab.fragments.TaxiEnrouteFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.GMapV2Direction;
@@ -139,7 +136,7 @@ public class TaxiEnroute implements State {
         if (mUserMarker == null) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(mUserLocation)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_grey600_48dp))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin))
                     .title("Me");
             mUserMarker = mMap.addMarker(markerOptions);
         } else {
@@ -163,7 +160,7 @@ public class TaxiEnroute implements State {
         mDriverLocation = new LatLng(mDriver.getLocation().getLatitude(),
                 mDriver.getLocation().getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().title(driver.getName())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_grey600_48dp))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car_pin))
                 .position(mDriverLocation);
         mDriverMarker = mMap.addMarker(markerOptions);
         zoomCamera();
@@ -179,35 +176,6 @@ public class TaxiEnroute implements State {
         mMap.moveCamera(cu);
         showRoute();
         updateDriverLocation();
-    }
-
-    private void moveToDestState() {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                showDriverArrived();
-            }
-        });
-    }
-
-    private void showDriverArrived() {
-        new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.driver_arrived)
-                .setMessage(R.string.driver_arrived_msg)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        changeState();
-                    }
-                }).create().show();
-    }
-
-    private void changeState() {
-        Bundle data = new Bundle();
-        EnrouteToDstState.EnrouteToDstData enrouteData =
-                new EnrouteToDstState.EnrouteToDstData(mUserLocation, mDriver.getObjectId());
-        data.putParcelable(EnrouteToDstState.EnrouteToDstData.ENROUTE_DATA, Parcels.wrap(enrouteData));
-        TaxiCabApplication.getStateManager().startState(StateManager.States.DestEnroute, data);
     }
 
     private void updateDriverLocation() {

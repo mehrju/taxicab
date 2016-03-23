@@ -209,6 +209,7 @@ public class ListDriversState implements State {
             marker.remove();
         }
         mMarkerMap.clear();
+        mMap.clear();
     }
 
     @Override

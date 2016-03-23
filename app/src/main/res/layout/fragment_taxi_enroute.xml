@@ -4,14 +4,92 @@
     android:layout_height="match_parent"
     tools:context="com.xc0ffeelabs.taxicab.fragments.TaxiEnrouteFragment">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorPrimaryDark"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/tv_profile"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="Nayan Kumar K"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-light"
+            android:textStyle="bold"
+            android:layout_toRightOf="@id/tv_profile"
+            android:layout_marginLeft="20dp"
+            android:textAllCaps="true"
+            android:id="@+id/tv_name"/>
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toRightOf="@id/tv_profile"
+            android:layout_below="@id/tv_name"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/ll_car">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_car_pin_black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ferrari"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toRightOf="@id/tv_profile"
+            android:layout_below="@id/ll_car"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/ll_rating">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="12dp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/driver_approching"
-        android:gravity="center_horizontal"
-        android:background="@color/colorPrimary"
-        android:textColor="@android:color/black"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="65dp"
+        android:layout_marginRight="20dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/phone"/>
+    </RelativeLayout>
 
     <include layout="@layout/progress_bar"
         android:id="@+id/pbLoading"/>
