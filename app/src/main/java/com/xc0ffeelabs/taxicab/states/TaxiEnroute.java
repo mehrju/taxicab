@@ -156,6 +156,7 @@ public class TaxiEnroute implements State {
     }
 
     private void addDriverMarker(User driver) {
+        setDriverDetails(driver);
         mDriver = driver;
         mDriverLocation = new LatLng(mDriver.getLocation().getLatitude(),
                 mDriver.getLocation().getLongitude());
@@ -164,6 +165,11 @@ public class TaxiEnroute implements State {
                 .position(mDriverLocation);
         mDriverMarker = mMap.addMarker(markerOptions);
         zoomCamera();
+    }
+
+    private void setDriverDetails(User driver) {
+        TaxiEnrouteFragment.getInstance().setDriverName(driver.getName());
+        TaxiEnrouteFragment.getInstance().setCarName(driver.getCarModel());
     }
 
     private void zoomCamera() {

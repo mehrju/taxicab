@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.xc0ffeelabs.taxicab.R;
 
@@ -15,6 +16,8 @@ import butterknife.ButterKnife;
 public class TaxiEnrouteFragment extends Fragment {
 
     @Bind(R.id.pbLoading) View mProgressBar;
+    @Bind(R.id.tv_car_name) TextView mCarName;
+    @Bind(R.id.tv_name) TextView mDriverName;
 
     private static TaxiEnrouteFragment mEnrouteFragment;
     private boolean mHidePbRequested = false;
@@ -52,5 +55,13 @@ public class TaxiEnrouteFragment extends Fragment {
         } else {
             mHidePbRequested = true;
         }
+    }
+
+    public void setDriverName(String name) {
+        mDriverName.setText(name);
+    }
+
+    public void setCarName(String name) {
+        mCarName.setText(name);
     }
 }
