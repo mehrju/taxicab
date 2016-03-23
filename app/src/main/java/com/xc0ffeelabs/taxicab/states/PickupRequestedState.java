@@ -263,6 +263,7 @@ public class PickupRequestedState implements State {
     @Override
     public void exitState() {
         mActivity.setIcon(R.drawable.ic_menu_black_24dp);
+        mActivity.setTitle(R.string.app_name);
     }
 
     private class MyHandler extends Handler {
