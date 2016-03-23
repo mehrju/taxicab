@@ -93,7 +93,7 @@ public class TripHistoryAdapter extends RecyclerView.Adapter<TripHistoryAdapter.
 
             String source = trip.getString("pickUpLocationString") != null ? trip.getString("pickUpLocationString") : "1 Facebook Way, Menlo Park, CA";
             String dest = trip.getString("destLocationString") != null ? trip.getString("pickUpLocationString") : "Microsoft SVC Building 1, Mountain View, CA";
-            holder.startLocation.setText(Html.fromHtml("Src: <i>"+ source + "</i>"));
+            holder.startLocation.setText(Html.fromHtml("Start: <i>"+ source + "</i>"));
 
             holder.destLocation.setText(Html.fromHtml("Dest: <i>"+ dest + "</i>"));
 
