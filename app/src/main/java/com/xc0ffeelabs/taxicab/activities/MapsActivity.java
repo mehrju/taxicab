@@ -45,6 +45,9 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         public void onReceive(Context context, Intent intent) {
             Log.d("NAYAN", "On Receive of broadcast");
             TaxiCabApplication.getStateManager().startDefaultState();
+            Intent mapsIntent = new Intent(context, MapsActivity.class);
+            mapsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(mapsIntent);
         }
     };
 

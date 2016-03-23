@@ -24,9 +24,11 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.MapsActivity;
 import com.xc0ffeelabs.taxicab.fragments.EnrouteToDestFragment;
+import com.xc0ffeelabs.taxicab.models.Location;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.GMapV2Direction;
 
@@ -71,7 +73,7 @@ public class EnrouteToDstState implements State {
     private Marker mDriverMarker;
     private User mDriver;
     private Handler mHandler = new MyHandler(Looper.getMainLooper());
-    final private LatLng mDest = new LatLng(37.4064495, -121.9439531);
+    private LatLng mDest = new LatLng(37.4810289, -122.1565179);
     Polyline mLine;
 
     public static EnrouteToDstState getInstance() {
@@ -103,6 +105,16 @@ public class EnrouteToDstState implements State {
         ft.commit();
         addUserMarker();
         fetchDriverDetails();
+
+        User user = (User) ParseUser.getCurrentUser();
+        try {
+            Location destLocation = user.getDestLocation();
+            destLocation.fetchIfNeeded();
+            mDest = new LatLng(destLocation.getLatitude(), destLocation.getLongitude());
+        } catch (Exception e) {
+            Log.e("NAYAN", "Failed to get latest info!");
+        }
+
     }
 
     private void fetchDriverDetails() {
