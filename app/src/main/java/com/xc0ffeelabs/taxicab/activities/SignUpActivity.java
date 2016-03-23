@@ -40,6 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolBar);
+        mToolBar.setNavigationIcon(R.drawable.ic_chariot_logo_9);
 
         mBtnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

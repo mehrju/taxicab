@@ -17,12 +17,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 import com.xc0ffeelabs.taxicab.R;
+import com.xc0ffeelabs.taxicab.fragments.HistoryFragment;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.receivers.PushNotificationReceiver;
@@ -41,6 +45,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
     private Drawable mLogo;
+    private boolean onMapFragment = false;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -65,6 +70,8 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
 
         setupNavDrawer();
 
+        setupProfile();
+
         TaxiCabApplication.getStateManager().setActivity(this);
 
         registerUserWithParseInstallation();
@@ -74,6 +81,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         mapsFragment.setMapReadyListener(this);
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
+        onMapFragment = true;
 
         mapsFragment.setOnTouchListener(new MapsFragment.OnTouchEvent() {
             @Override
@@ -98,6 +106,20 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         installation.saveInBackground();
     }
 
+    private void setupProfile() {
+        User user = (User)ParseUser.getCurrentUser();
+        String imageUrl = user.getProfileImage();
+        ImageView iv = (ImageView)mNavView.getHeaderView(0).findViewById(R.id.profileImage);
+        if (imageUrl!=null) {
+            Picasso.with(this).load(imageUrl).into(iv);
+        }
+        TextView name = (TextView)mNavView.getHeaderView(0).findViewById(R.id.UserName);
+        name.setText(user.getName());
+
+        TextView email = (TextView)mNavView.getHeaderView(0).findViewById(R.id.email);
+        email.setText(user.getEmail());
+    }
+
     private void setupNavDrawer() {
         mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -116,10 +138,39 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
             case R.id.nd_logout:
                 logoutUserConf();
                 break;
+            case R.id.map_home:
+                launchMap();
+                break;
+            case R.id.history:
+                launchHistory();
+                break;
             default:
                 throw new UnsupportedOperationException("Invalid menu item clicked");
         }
+        item.setChecked(true);
+        setTitle(item.getTitle());
         mDrawer.closeDrawers();
+    }
+
+    private void launchMap() {
+        if (!onMapFragment) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            MapsFragment mapsFragment = MapsFragment.newInstance();
+            mapsFragment.setMapReadyListener(this);
+            ft.replace(R.id.fm_placeholder, mapsFragment);
+            ft.commit();
+            onMapFragment = true;
+        }
+    }
+
+    private void launchHistory() {
+        onMapFragment = false;
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        HistoryFragment fragment = new HistoryFragment();
+        ft.replace(R.id.fm_placeholder, fragment);
+        ft.commit();
+
+
     }
 
     private void logoutUserConf() {

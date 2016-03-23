@@ -32,6 +32,7 @@ public class User extends ParseUser {
 
     public static final String USER_ROLE = "user";
     public static final String DRIVER_ROLE = "driver";
+    public static final String PROFILE_IMAGE = "profileImage";
 
     private String travelTimeText;
     private long travelTime;
@@ -172,5 +173,13 @@ public class User extends ParseUser {
 
     public Location getDriverStartLocation() {
         return  (Location) get(DRIVER_START_LOCATION);
+    }
+
+    public String getProfileImage(){
+        String imageUrl =  getString(PROFILE_IMAGE);
+        if (imageUrl != null && imageUrl.length() > 0) {
+            return imageUrl;
+        }
+        return null;
     }
 }
