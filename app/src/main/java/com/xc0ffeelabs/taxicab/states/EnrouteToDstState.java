@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -71,6 +72,7 @@ public class EnrouteToDstState implements State {
     private User mDriver;
     private Handler mHandler = new MyHandler(Looper.getMainLooper());
     final private LatLng mDest = new LatLng(37.4064495, -121.9439531);
+    Polyline mLine;
 
     public static EnrouteToDstState getInstance() {
         if (mTaxiEnroute == null) {
@@ -174,7 +176,7 @@ public class EnrouteToDstState implements State {
             for (int i = 0; i < directionPoint.size(); i++) {
                 rectLine.add(directionPoint.get(i));
             }
-            mMap.addPolyline(rectLine);
+            mLine = mMap.addPolyline(rectLine);
         }
     }
 
@@ -192,7 +194,8 @@ public class EnrouteToDstState implements State {
 
     @Override
     public void exitState() {
-
+        if (mUserMarker != null) mUserMarker.remove();
+        if (mLine != null) mLine.remove();
     }
 
     private class MyHandler extends Handler {
