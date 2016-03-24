@@ -6,11 +6,15 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/driver_dst"
-        android:gravity="center_horizontal"
+        android:layout_height="40dp"
+        android:text="You are on your way to destination"
+        android:gravity="center"
         android:background="@color/colorPrimary"
-        android:textColor="@android:color/black"
-        android:layout_alignParentBottom="true"/>
+        android:textColor="@color/grey"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/tv_apprTime"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:elevation="5dp"/>
 
 </RelativeLayout>

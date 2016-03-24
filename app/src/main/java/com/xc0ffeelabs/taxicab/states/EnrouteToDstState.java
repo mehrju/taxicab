@@ -103,7 +103,6 @@ public class EnrouteToDstState implements State {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fm_controls, EnrouteToDestFragment.getInstance(), "enroute");
         ft.commit();
-        addUserMarker();
         fetchDriverDetails();
 
         User user = (User) ParseUser.getCurrentUser();
@@ -111,6 +110,7 @@ public class EnrouteToDstState implements State {
             Location destLocation = user.getDestLocation();
             destLocation.fetchIfNeeded();
             mDest = new LatLng(destLocation.getLatitude(), destLocation.getLongitude());
+            addUserMarker();
         } catch (Exception e) {
             Log.e("NAYAN", "Failed to get latest info!");
         }
@@ -132,7 +132,7 @@ public class EnrouteToDstState implements State {
         mDriverLocation = new LatLng(mDriver.getLocation().getLatitude(),
                 mDriver.getLocation().getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().title(driver.getName())
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_grey600_48dp))
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_car_pin))
                 .position(mDriverLocation);
         mDriverMarker = mMap.addMarker(markerOptions);
         zoomCamera();
@@ -182,8 +182,7 @@ public class EnrouteToDstState implements State {
     private void drawRoute(Document doc) {
         if (doc != null) {
             ArrayList<LatLng> directionPoint = GMapV2Direction.getDirection(doc);
-            PolylineOptions rectLine = new PolylineOptions().width(10).color(
-                    Color.BLUE);
+            PolylineOptions rectLine = new PolylineOptions().width(10).color(Color.parseColor("#4285f4"));
 
             for (int i = 0; i < directionPoint.size(); i++) {
                 rectLine.add(directionPoint.get(i));
@@ -196,7 +195,7 @@ public class EnrouteToDstState implements State {
         if (mUserMarker == null) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(mDest)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_grey600_48dp))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_green))
                     .title("Destination");
             mUserMarker = mMap.addMarker(markerOptions);
         } else {

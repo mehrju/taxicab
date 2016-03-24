@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.xc0ffeelabs.taxicab.R;
+
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,6 +19,7 @@ import butterknife.ButterKnife;
 public class DestReachedFragment extends Fragment {
 
     @Bind(R.id.btn_endtrip) Button mBtnEndTrip;
+    @Bind(R.id.textView) TextView mRate;
 
     public interface TripEndInteraction {
         void onTripEnded();
@@ -57,5 +61,14 @@ public class DestReachedFragment extends Fragment {
                 }
             }
         });
+
+        mRate.setText("$" + String.valueOf(generateRandom()));
+    }
+
+    private int generateRandom() {
+        Random r = new Random();
+        int Low = 10;
+        int High = 50;
+        return r.nextInt(High-Low) + Low;
     }
 }

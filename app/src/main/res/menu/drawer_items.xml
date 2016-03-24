@@ -7,8 +7,23 @@
     </item>
     <item
         android:id="@+id/history"
-        android:title="@string/history"
+        android:title="History"
         android:icon="@drawable/ic_history_black_24dp">
+    </item>
+    <item
+        android:id="@+id/trip_estimate"
+        android:title="Fare estimate"
+        android:icon="@drawable/ic_attach_money_black_24dp">
+    </item>
+    <item
+        android:id="@+id/book_in_advance"
+        android:title="Pick up later"
+        android:icon="@drawable/ic_action_name">
+    </item>
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_stat_name">
     </item>
     <item
         android:id="@+id/nd_logout"

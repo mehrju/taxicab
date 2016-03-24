@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     @Bind(R.id.nvView) NavigationView mNavView;
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.dl_nav_drawer) DrawerLayout mDrawer;
+    @Bind(R.id.fm_controls) View mControls;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private GoogleMap mMap;
@@ -169,8 +171,6 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         HistoryFragment fragment = new HistoryFragment();
         ft.replace(R.id.fm_placeholder, fragment);
         ft.commit();
-
-
     }
 
     private void logoutUserConf() {

@@ -170,6 +170,7 @@ public class TaxiEnroute implements State {
     private void setDriverDetails(User driver) {
         TaxiEnrouteFragment.getInstance().setDriverName(driver.getName());
         TaxiEnrouteFragment.getInstance().setCarName(driver.getCarModel());
+        TaxiEnrouteFragment.getInstance().setImage(driver.getProfileImage());
     }
 
     private void zoomCamera() {
@@ -202,7 +203,7 @@ public class TaxiEnroute implements State {
         if (doc != null) {
             ArrayList<LatLng> directionPoint = GMapV2Direction.getDirection(doc);
             PolylineOptions rectLine = new PolylineOptions().width(10).color(
-                    Color.BLUE);
+                    Color.parseColor("#4285f4"));
 
             for (int i = 0; i < directionPoint.size(); i++) {
                 rectLine.add(directionPoint.get(i));
