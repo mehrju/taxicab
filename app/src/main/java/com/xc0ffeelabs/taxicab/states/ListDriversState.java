@@ -90,7 +90,7 @@ public class ListDriversState implements State {
                         ControlsFragment.getInstance().animateShowControls();
                     }
                 }).execute();
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 12);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(mUserLocation, 14);
                 mMap.moveCamera(cameraUpdate);
                 startLocationUpdates();
                 fetchNearByDrivers();
