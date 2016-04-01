@@ -38,12 +38,13 @@ public class PickupRequestedState implements State {
     private static final int REFRESH_INTERVAL = 5; // in sec
     /* We will wait for max 20sec in this state. If no response within 20 sec,
     *  we will timeout */
-    private static final int MAX_WAIT = 60; // in sec
+    private static final int MAX_WAIT = 120; // in sec
     private static final int MAX_RETRY = MAX_WAIT / 5;
     private static final String TRIP_OBJECT_ID = "tripObjectId";
     private static final String TAG = PickupRequestedState.class.getSimpleName();
 
     private int mRetryCnt = 0;
+    private int mCurrDriver = 0;
 
     @Parcel
     public static class PickupRequestData {
@@ -103,8 +104,8 @@ public class PickupRequestedState implements State {
         updatePickupLocation();
     }
 
-    private void initiateTrip() {
-        ParseEndPoints.initiateTrip(mUserId, mDriverIds, new FunctionCallback<ParseObject>() {
+    private void initiateTrip(String driverId) {
+        ParseEndPoints.initiateTrip(mUserId, driverId, new FunctionCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
                 object.fetchInBackground(new GetCallback<ParseObject>() {
@@ -150,12 +151,16 @@ public class PickupRequestedState implements State {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    updateDriverStartLocation(mDriverIds.get(0));
+                    tryDriver(mDriverIds.get(mCurrDriver));
                 } else {
                     Log.d(TAG, "Wrong.. wrong.. " + e);
                 }
             }
         });
+    }
+
+    private void tryDriver(String id) {
+        updateDriverStartLocation(id);
     }
 
     private void updateDriverStartLocation(final String driverId) {
@@ -170,7 +175,7 @@ public class PickupRequestedState implements State {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            initiateTrip();
+                            initiateTrip(driverId);
                         } else {
                             Log.d(TAG, "Saving failed");
                         }
@@ -200,6 +205,12 @@ public class PickupRequestedState implements State {
                     String status = object.getString("status");
                     if (status.equals("confirmed")) {
                         fetchDataForTripConfirm(object.getParseObject("driver"));
+                    } else if (status.equals("driver-denied")
+                            || status.equals("timeout")) {
+                        mCurrDriver++;
+                        if (mCurrDriver < mDriverIds.size()) {
+                            tryDriver(mDriverIds.get(mCurrDriver));
+                        }
                     } else {
                         retry(objectId);
                     }
