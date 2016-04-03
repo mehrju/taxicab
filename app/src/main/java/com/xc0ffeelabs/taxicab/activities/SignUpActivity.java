@@ -28,7 +28,6 @@ public class SignUpActivity extends AppCompatActivity {
     @Bind(R.id.user_phone) EditText mPhoneNumber;
     @Bind(R.id.user_email) EditText mEmailAdd;
     @Bind(R.id.user_passwd) EditText mPasswd;
-    @Bind(R.id.user_conf_password) EditText mConfPasswd;
     @Bind(R.id.btn_signup) Button mBtnSignUp;
     @Bind(R.id.pb_loading) View mPbLoading;
 
@@ -53,7 +52,6 @@ public class SignUpActivity extends AppCompatActivity {
     private void onSignUpClicked() {
         final String email = String.valueOf(mEmailAdd.getText());
         final String password = String.valueOf(mPasswd.getText());
-        String confirmPassword = String.valueOf(mConfPasswd.getText());
         String name = String.valueOf(mUsername.getText());
         String phNumber = String.valueOf(mPhoneNumber.getText());
 
@@ -62,14 +60,9 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()
+        if (email.isEmpty() || password.isEmpty()
                 || name.isEmpty() || phNumber.isEmpty()) {
             Toast.makeText(this, R.string.required_fields, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(this, R.string.passwd_mismatch, Toast.LENGTH_LONG).show();
             return;
         }
 
