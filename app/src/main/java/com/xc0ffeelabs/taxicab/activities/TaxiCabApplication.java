@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.interceptors.ParseLogInterceptor;
@@ -57,6 +58,8 @@ public class TaxiCabApplication extends Application {
                 .applicationId(APP_ID) // should correspond to APP_ID env variable
                 .addNetworkInterceptor(new ParseLogInterceptor())
                 .server(PARSE_URL).build());
+
+        ParseFacebookUtils.initialize(this);
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }

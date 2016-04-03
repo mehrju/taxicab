@@ -40,4 +40,6 @@
     <string name="rate_cst">You have arrived. Please rate customer</string>
     <string name="home">Home</string>
     <string name="history">History</string>
+
+    <string name="facebook_app_id">812609065512328</string>
 </resources>

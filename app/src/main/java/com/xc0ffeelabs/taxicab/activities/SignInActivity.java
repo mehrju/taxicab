@@ -15,9 +15,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.Utils;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
     @Bind(R.id.pb_loading) View mPbLoading;
     @Bind(R.id.toolbar) Toolbar mToolBar;
     @Bind(R.id.moving_car) ImageView movingCar;
+    @Bind(R.id.fb_login) View mFbSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +65,31 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onSignUpBtnClicked();
+            }
+        });
+
+        mFbSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> permissions = new ArrayList();
+                permissions.add("email");
+                ParseFacebookUtils.logInWithReadPermissionsInBackground(SignInActivity.this, permissions,
+                        new LogInCallback() {
+                            @Override
+                            public void done(ParseUser user, ParseException err) {
+                                if (err != null) {
+                                    Log.d("MyApp", "Uh oh. Error occurred" + err.toString());
+                                } else if (user == null) {
+                                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                                } else if (user.isNew()) {
+                                    Log.d("MyApp", "User signed up and logged in through Facebook!");
+                                } else {
+                                    Toast.makeText(SignInActivity.this, "Logged in", Toast.LENGTH_SHORT)
+                                            .show();
+                                    Log.d("MyApp", "User logged in through Facebook!");
+                                }
+                            }
+                        });
             }
         });
     }
@@ -131,5 +163,11 @@ public class SignInActivity extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 }

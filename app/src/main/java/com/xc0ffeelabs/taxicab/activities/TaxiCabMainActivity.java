@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.NetworkUtils;
@@ -56,6 +57,7 @@ public class TaxiCabMainActivity extends AppCompatActivity {
                 initialize();
             }
         }
+        AppEventsLogger.activateApp(this);
     }
 
     private void showLoginActivity() {
@@ -157,5 +159,11 @@ public class TaxiCabMainActivity extends AppCompatActivity {
                 new CheckOnlineStatus(this).execute();
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AppEventsLogger.deactivateApp(this);
     }
 }
