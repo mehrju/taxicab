@@ -29,6 +29,8 @@ public class User extends ParseUser {
     public static final String PICKUP_LOCATION = "pickUpLocation";
     public static final String DEST_LOCATION = "destLocation";
     public static final String DRIVER_START_LOCATION = "driverStartLocation";
+    private static final String IS_FACEBOOK_LOGIN = "fbLogin";
+    private static final String IS_VERIFIED = "fbUserVerified";
 
     public static final String USER_ROLE = "user";
     public static final String DRIVER_ROLE = "driver";
@@ -184,5 +186,21 @@ public class User extends ParseUser {
             return imageUrl;
         }
         return null;
+    }
+
+    public void setIsFbLogin(boolean isFbLogin) {
+        put(IS_FACEBOOK_LOGIN, isFbLogin);
+    }
+
+    public boolean getIsFbLogin() {
+        return getBoolean(IS_FACEBOOK_LOGIN);
+    }
+
+    public void setIsUserVerified(boolean isUserVerified) {
+        put(IS_VERIFIED, isUserVerified);
+    }
+
+    public boolean getIsUserVerified() {
+        return getBoolean(IS_VERIFIED);
     }
 }

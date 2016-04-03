@@ -7,13 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.parse.ParseFacebookUtils;
 import com.xc0ffeelabs.taxicab.R;
+import com.xc0ffeelabs.taxicab.fragments.FBSignUpFragment;
 import com.xc0ffeelabs.taxicab.fragments.SignUpFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SignUpActivity extends AppCompatActivity implements SignUpFragment.SignUpInteraction {
+public class SignUpActivity extends AppCompatActivity
+        implements SignUpFragment.SignUpInteraction,
+        FBSignUpFragment.FBSignUpInteraction {
 
     private static final String TAG = SignUpActivity.class.getSimpleName();
 
@@ -40,6 +44,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpFragment.
     }
 
     @Override
+    public void onSignUpFailed() {
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void onSignUpSuccess() {
         Log.d(TAG, "User signed up!");
         Intent intent = new Intent(this, MapsActivity.class);
@@ -49,7 +64,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpFragment.
     }
 
     @Override
-    public void onSignUpFailed() {
+    public void startFbSignUp() {
+        mToolBar.setTitle("Verify your details");
+    }
+
+    @Override
+    public void fbSignUpSuccess() {
+        onSignUpSuccess();
+    }
+
+    @Override
+    public void fbSignUpFailed() {
 
     }
 }

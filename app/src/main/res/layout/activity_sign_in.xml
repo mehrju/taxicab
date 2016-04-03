@@ -1,35 +1,80 @@
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/splash_bg"
+    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/black"
+        android:title="@string/app_name"
+        android:background="?attr/colorPrimary">
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_fb_login_btn"
+        android:id="@+id/fb_login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fb_login"
+        android:id="@+id/ll_or"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tv_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:text="OR"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/darker_gray" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/loginFrame"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".RegistrationActivity">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:titleTextColor="@android:color/black"
-            android:title="@string/app_name"
-            android:background="?attr/colorPrimary">
-        </android.support.v7.widget.Toolbar>
+        tools:context=".RegistrationActivity"
+        android:layout_below="@id/ll_or">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingRight="40dp"
             android:paddingLeft="40dp"
-            android:layout_marginTop="50dp"
-            android:id="@+id/login_details"
-            android:layout_below="@id/toolbar">
+            android:layout_marginTop="20dp"
+            android:id="@+id/login_details">
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/user_email_wrap"
                 android:layout_width="match_parent"
@@ -42,8 +87,7 @@
                     android:ems="10"
                     android:hint="@string/email_address"
                     android:id="@+id/user_email"
-                    android:layout_centerHorizontal="true"
-                    />
+                    android:layout_centerHorizontal="true"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -64,77 +108,77 @@
                     android:layout_alignStart="@+id/user_email_wrap" />
             </android.support.design.widget.TextInputLayout>
 
-
-
-
-
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/signin"
                 android:id="@+id/btn_signin"
-                android:layout_alignStart="@id/user_password_wrap"
-                android:layout_alignLeft="@id/user_password_wrap"
                 android:layout_below="@+id/user_password_wrap"
                 android:background="@drawable/rounded_button"
                 android:textColor="@color/white"
                 android:layout_marginTop="10dp"
-                android:textSize="12sp"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signup"
-                android:id="@+id/btn_signup"
-                android:layout_below="@+id/user_password_wrap"
-                android:layout_alignEnd="@id/user_password_wrap"
-                android:layout_alignRight="@id/user_password_wrap"
-                android:background="@drawable/rounded_button"
-                android:textColor="@color/white"
-                android:layout_marginTop="10dp"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"/>
 
         </RelativeLayout>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_fb_login_btn"
-            android:layout_marginTop="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/login_details"
-            android:id="@+id/fb_login" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sedan_car"
-            android:layout_alignParentBottom="true"
-            android:alpha="0.8"
-            android:paddingBottom="50dp"
-            android:id="@+id/moving_car"/>
-
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:alpha="0.6"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="true"
-            android:src="@drawable/checker"
-            android:id="@+id/checker"
-            android:layout_alignBottom="@id/moving_car"
-            android:paddingBottom="30dp"
-            />
-
-
-
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loginFrame"
+        android:id="@+id/ll_or_signup"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp">
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:text="OR"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/darker_gray" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_below="@id/ll_or_signup">
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create account"
+        android:id="@+id/btn_signup"
+        android:background="@drawable/rounded_button"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:layout_marginTop="20dp"/>
+    </FrameLayout>
 
     <include layout="@layout/progress_bar"
         android:id="@+id/pb_loading"
         android:visibility="gone"/>
 
-</FrameLayout>
+</RelativeLayout>

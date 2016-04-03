@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -19,8 +25,11 @@ import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.activities.TaxiCabApplication;
+import com.xc0ffeelabs.taxicab.models.FBResponse;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.utilities.Utils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -97,16 +106,17 @@ public class SignUpFragment extends Fragment {
                         new LogInCallback() {
                             @Override
                             public void done(ParseUser user, ParseException err) {
-                                setLoading(false);
                                 if (err != null) {
+                                    setLoading(false);
                                     Log.d(TAG, "Uh oh. Error occurred" + err.toString());
                                     Toast.makeText(getActivity(), "Error while signing up", Toast.LENGTH_SHORT).show();
                                 } else if (user == null) {
+                                    setLoading(false);
                                     Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                                     Toast.makeText(getActivity(), "Login cancelled", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Log.d(TAG, "User logged in through Facebook!");
-                                    switchToVerificationFragment();
+                                    getUserInfoFromFb();
                                 }
                             }
                         });
@@ -114,9 +124,40 @@ public class SignUpFragment extends Fragment {
         });
     }
 
+    private void getUserInfoFromFb() {
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.v("LoginActivity", response.toString());
+                        setLoading(false);
+                        if (response == null) {
+                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Gson gson = new GsonBuilder().create();
+                            FBResponse fbResponse  = gson.fromJson(response.getJSONObject().toString(), FBResponse.class);
+                            User user = (User) ParseUser.getCurrentUser();
+                            user.setUsername(fbResponse.email);
+                            user.setName(fbResponse.name);
+                            user.setIsFbLogin(true);
+                            user.setRole(User.USER_ROLE);
+                            user.setIsUserVerified(false);
+                            user.saveInBackground();
+                            switchToVerifyFragment();
+                        }
+                    }
+                });
 
-    private void switchToVerificationFragment() {
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,link,picture,email");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
 
+    private void switchToVerifyFragment() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm.beginTransaction().replace(R.id.fm_placeholder, FBSignUpFragment.getInstance()).commit();
     }
 
     private void onSignUpClicked() {
@@ -149,6 +190,7 @@ public class SignUpFragment extends Fragment {
         user.setName(name);
         user.setRole(User.USER_ROLE);
         user.setPhone(phoneNumber);
+        user.saveInBackground();
         setLoading(true);
         user.signUpInBackground(new SignUpCallback() {
             @Override

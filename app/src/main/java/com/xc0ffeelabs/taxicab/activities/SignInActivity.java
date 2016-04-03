@@ -1,18 +1,14 @@
 package com.xc0ffeelabs.taxicab.activities;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
@@ -20,6 +16,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.xc0ffeelabs.taxicab.R;
+import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.network.AccountManager;
 import com.xc0ffeelabs.taxicab.utilities.Utils;
 
@@ -38,7 +35,6 @@ public class SignInActivity extends AppCompatActivity {
     @Bind(R.id.btn_signup) Button mBtnSignup;
     @Bind(R.id.pb_loading) View mPbLoading;
     @Bind(R.id.toolbar) Toolbar mToolBar;
-    @Bind(R.id.moving_car) ImageView movingCar;
     @Bind(R.id.fb_login) View mFbSignIn;
 
     @Override
@@ -51,8 +47,6 @@ public class SignInActivity extends AppCompatActivity {
         setSupportActionBar(mToolBar);
 
         mToolBar.setNavigationIcon(R.drawable.ic_chariot_logo_9);
-
-        animateCarMoving();
 
         mBtnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,25 +67,34 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ArrayList<String> permissions = new ArrayList();
                 permissions.add("email");
+                setLoading(true);
                 ParseFacebookUtils.logInWithReadPermissionsInBackground(SignInActivity.this, permissions,
                         new LogInCallback() {
                             @Override
                             public void done(ParseUser user, ParseException err) {
+                                setLoading(false);
                                 if (err != null) {
-                                    Log.d("MyApp", "Uh oh. Error occurred" + err.toString());
+                                    Log.d(TAG, "Uh oh. Error occurred" + err.toString());
                                 } else if (user == null) {
-                                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                                } else if (user.isNew()) {
-                                    Log.d("MyApp", "User signed up and logged in through Facebook!");
+                                    Log.d(TAG, "Uh oh. The user cancelled the Facebook login.");
                                 } else {
-                                    Toast.makeText(SignInActivity.this, "Logged in", Toast.LENGTH_SHORT)
-                                            .show();
-                                    Log.d("MyApp", "User logged in through Facebook!");
+                                    Log.d(TAG, "User logged in through Facebook!");
+                                    checkLogin();
                                 }
                             }
                         });
             }
         });
+    }
+
+    private void checkLogin() {
+        User user = (User) ParseUser.getCurrentUser();
+        if (user.getIsUserVerified()) {
+            AccountManager.getInstance().storeFbCredentials();
+            signInSuccess();
+        } else {
+            Toast.makeText(this, "Please signup first", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onSignUpBtnClicked() {
@@ -136,20 +139,6 @@ public class SignInActivity extends AppCompatActivity {
         } else {
             mPbLoading.setVisibility(View.GONE);
         }
-    }
-
-    private void animateCarMoving() {
-
-        BitmapDrawable bd=(BitmapDrawable) this.getResources().getDrawable(R.drawable.ic_sedan_car);
-        int iconWidth=bd.getBitmap().getWidth();
-        float deviceWidth = getDeviceWidth();
-
-        Log.d("Debug", "Icon WIdth" + iconWidth);
-        float animStopPixel = deviceWidth - iconWidth - 20;
-        ObjectAnimator carMoving = ObjectAnimator.ofFloat(movingCar, "x", -2000f, animStopPixel);
-        carMoving.setDuration(2500);
-        carMoving.setInterpolator(new DecelerateInterpolator());
-        carMoving.start();
     }
 
     private float getDeviceWidth() {
