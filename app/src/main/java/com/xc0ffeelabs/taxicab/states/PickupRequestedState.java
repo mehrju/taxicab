@@ -145,7 +145,7 @@ public class PickupRequestedState implements State {
     }
 
     private void updateDestLocation() {
-        // Dest location is already. Ensure it's saved
+        // Dest location is already set. Ensure it's saved
         User user = (User) ParseUser.getCurrentUser();
         user.saveInBackground(new SaveCallback() {
             @Override

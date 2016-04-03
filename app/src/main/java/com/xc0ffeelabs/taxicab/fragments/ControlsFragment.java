@@ -91,7 +91,7 @@ public class ControlsFragment extends Fragment {
                 mDest.setText(place.getName());
                 LatLng destLocation = place.getLatLng();
                 User user = (User) ParseUser.getCurrentUser();
-                user.setDestLocation(destLocation);
+                user.setDestLocation(destLocation, place.getName().toString());
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
                 Log.i(TAG, status.getStatusMessage());

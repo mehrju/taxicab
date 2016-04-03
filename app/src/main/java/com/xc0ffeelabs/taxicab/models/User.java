@@ -147,10 +147,13 @@ public class User extends ParseUser {
         saveInBackground(callback);
     }
 
-    public void setDestLocation(LatLng location) {
+    public void setDestLocation(LatLng location, String text) {
         Location pnt = new Location();
         pnt.setLatitude(location.latitude);
         pnt.setLongitude(location.longitude);
+        if (!TextUtils.isEmpty(text)) {
+            pnt.setText(text);
+        }
         put(DEST_LOCATION, pnt);
         saveInBackground();
     }
