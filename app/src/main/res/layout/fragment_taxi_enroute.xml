@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.xc0ffeelabs.taxicab.fragments.TaxiEnrouteFragment">
 
     <RelativeLayout
@@ -10,13 +11,18 @@
         android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true">
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@color/white"
+            android:src="@drawable/profile_avatar"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/tv_profile"/>
+            android:id="@+id/tv_profile"
+            app:riv_corner_radius="30dip"
+            app:riv_border_color="#333333"
+            app:riv_mutate_background="true"
+            app:riv_tile_mode="repeat"
+            app:riv_oval="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +95,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="65dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="20dp"
+        android:id="@+id/call">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

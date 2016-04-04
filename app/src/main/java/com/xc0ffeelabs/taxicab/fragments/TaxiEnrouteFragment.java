@@ -1,8 +1,11 @@
 package com.xc0ffeelabs.taxicab.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,9 @@ public class TaxiEnrouteFragment extends Fragment {
     @Bind(R.id.tv_car_name) TextView mCarName;
     @Bind(R.id.tv_name) TextView mDriverName;
     @Bind(R.id.tv_profile) ImageView mProfile;
+    @Bind(R.id.call) View mCall;
+
+    private String mPhNumber;
 
     private static TaxiEnrouteFragment mEnrouteFragment;
     private boolean mHidePbRequested = false;
@@ -39,6 +45,17 @@ public class TaxiEnrouteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_taxi_enroute, container, false);
 
         ButterKnife.bind(this, view);
+
+        mCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(mPhNumber)) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + mPhNumber));
+                    startActivity(intent);
+                }
+            }
+        });
 
         return view;
     }
@@ -69,6 +86,12 @@ public class TaxiEnrouteFragment extends Fragment {
     }
 
     public void setImage(String imageUrl) {
-        Picasso.with(getContext()).load(imageUrl).into(mProfile);
+        if (!TextUtils.isEmpty(imageUrl)) {
+            Picasso.with(getContext()).load(imageUrl).into(mProfile);
+        }
+    }
+
+    public void setPhone(String phone) {
+        mPhNumber = phone;
     }
 }

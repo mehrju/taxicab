@@ -171,6 +171,7 @@ public class TaxiEnroute implements State {
         TaxiEnrouteFragment.getInstance().setDriverName(driver.getName());
         TaxiEnrouteFragment.getInstance().setCarName(driver.getCarModel());
         TaxiEnrouteFragment.getInstance().setImage(driver.getProfileImage());
+        TaxiEnrouteFragment.getInstance().setPhone(driver.getPhone());
     }
 
     private void zoomCamera() {

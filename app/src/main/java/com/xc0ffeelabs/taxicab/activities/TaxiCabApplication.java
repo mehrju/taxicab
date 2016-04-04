@@ -7,7 +7,6 @@ import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.interceptors.ParseLogInterceptor;
 import com.securepreferences.SecurePreferences;
 import com.xc0ffeelabs.taxicab.models.Location;
 import com.xc0ffeelabs.taxicab.models.Trip;
@@ -56,7 +55,6 @@ public class TaxiCabApplication extends Application {
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(APP_ID) // should correspond to APP_ID env variable
-                .addNetworkInterceptor(new ParseLogInterceptor())
                 .server(PARSE_URL).build());
 
         ParseFacebookUtils.initialize(this);

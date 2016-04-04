@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -160,6 +161,7 @@ public class PickupRequestedState implements State {
     }
 
     private void tryDriver(String id) {
+        if (TextUtils.isEmpty(id)) return;
         updateDriverStartLocation(id);
     }
 
