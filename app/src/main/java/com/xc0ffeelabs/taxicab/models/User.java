@@ -188,6 +188,10 @@ public class User extends ParseUser {
         return null;
     }
 
+    public void setProfieImage(String url) {
+        put(PROFILE_IMAGE, url);
+    }
+
     public void setIsFbLogin(boolean isFbLogin) {
         put(IS_FACEBOOK_LOGIN, isFbLogin);
     }

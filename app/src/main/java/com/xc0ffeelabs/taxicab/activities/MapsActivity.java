@@ -98,7 +98,12 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
                 new IntentFilter(PushNotificationReceiver.REQUEST_LAUNCH_MAP));
-        mPb.setVisibility(View.VISIBLE);
+        setLoading(true);
+    }
+
+    public void setLoading(boolean loading) {
+        if (loading) mPb.setVisibility(View.VISIBLE);
+        else mPb.setVisibility(View.GONE);
     }
 
     private void registerUserWithParseInstallation() {
@@ -211,6 +216,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        StateManager.getInstance().resetCurrentState();
         finish();
     }
 
@@ -218,7 +224,6 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     public void onMapReady(GoogleMap map, GoogleApiClient apiClient) {
         mMap = map;
         mApiClient = apiClient;
-        mPb.setVisibility(View.GONE);
         TaxiCabApplication.getStateManager().startDefaultState();
     }
 

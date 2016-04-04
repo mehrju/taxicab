@@ -142,6 +142,10 @@ public class SignUpFragment extends Fragment {
                             user.setName(fbResponse.name);
                             user.setIsFbLogin(true);
                             user.setRole(User.USER_ROLE);
+                            if (fbResponse.picture != null &&
+                                    fbResponse.picture.data != null) {
+                                user.setProfieImage(fbResponse.picture.data.url);
+                            }
                             user.setIsUserVerified(false);
                             user.saveInBackground();
                             switchToVerifyFragment();

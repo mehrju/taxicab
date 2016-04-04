@@ -36,6 +36,10 @@
 
     </RelativeLayout>
 
+    <include layout="@layout/progress_bar"
+        android:id="@+id/progress_bar"
+        android:visibility="gone"/>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nvView"
         android:layout_width="wrap_content"
@@ -44,9 +48,5 @@
         android:background="@android:color/white"
         app:menu="@menu/drawer_items"
         app:headerLayout="@layout/nav_header"/>
-
-    <include layout="@layout/progress_bar"
-        android:id="@+id/progress_bar"
-        android:visibility="gone"/>
 
 </android.support.v4.widget.DrawerLayout>

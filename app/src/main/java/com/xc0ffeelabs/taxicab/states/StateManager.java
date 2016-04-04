@@ -35,7 +35,7 @@ public class StateManager {
     private static StateManager ourInstance;
 
     private State mCurrentState = null;
-    private MapsActivity mAcitivity;
+    private MapsActivity mActivity;
 
     public static StateManager getInstance() {
         if (ourInstance == null) {
@@ -48,7 +48,7 @@ public class StateManager {
     }
 
     public void setActivity(MapsActivity activity) {
-        mAcitivity = activity;
+        mActivity = activity;
     }
 
     /* Do not call this method without showing progress bar. */
@@ -124,6 +124,8 @@ public class StateManager {
 
     public void startState(States state, Bundle data) {
 
+        mActivity.setLoading(false);
+
         if (mCurrentState != null && state == mCurrentState.getState()) {
             return;
         }
@@ -151,10 +153,14 @@ public class StateManager {
             default:
                 throw new UnsupportedOperationException("No such state");
         }
-        mCurrentState.enterState(mAcitivity, data);
+        mCurrentState.enterState(mActivity, data);
     }
 
     public State getCurrentState() {
         return mCurrentState;
+    }
+
+    public void resetCurrentState() {
+        mCurrentState = null;
     }
 }
