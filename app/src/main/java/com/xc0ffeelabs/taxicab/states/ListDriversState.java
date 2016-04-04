@@ -125,7 +125,6 @@ public class ListDriversState implements State {
     }
 
     private void repositionCamera(CameraPosition cameraPosition) {
-        displayAproximateTime("--", false);
         mNearbyDrivers.setLocation(cameraPosition.target);
         mNearbyDrivers.getNow();
         mUserLocation = cameraPosition.target;
@@ -159,6 +158,8 @@ public class ListDriversState implements State {
                                 mSortedUsers.addAll(users);
                                 if (drivers != null && !drivers.isEmpty()) {
                                     displayAproximateTime(drivers.get(0).getTravelTimeText(), false);
+                                } else {
+                                    displayAproximateTime("--", false);
                                 }
                                 mSortRequested = false;
                             }

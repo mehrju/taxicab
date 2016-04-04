@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,6 +41,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     @Bind(R.id.toolbar) Toolbar mToolbar;
     @Bind(R.id.dl_nav_drawer) DrawerLayout mDrawer;
     @Bind(R.id.fm_controls) View mControls;
+    @Bind(R.id.progress_bar) View mPb;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private GoogleMap mMap;
@@ -52,7 +52,6 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("NAYAN", "On Receive of broadcast");
             TaxiCabApplication.getStateManager().startDefaultState();
             Intent mapsIntent = new Intent(context, MapsActivity.class);
             mapsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -99,6 +98,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver,
                 new IntentFilter(PushNotificationReceiver.REQUEST_LAUNCH_MAP));
+        mPb.setVisibility(View.VISIBLE);
     }
 
     private void registerUserWithParseInstallation() {
@@ -218,6 +218,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     public void onMapReady(GoogleMap map, GoogleApiClient apiClient) {
         mMap = map;
         mApiClient = apiClient;
+        mPb.setVisibility(View.GONE);
         TaxiCabApplication.getStateManager().startDefaultState();
     }
 

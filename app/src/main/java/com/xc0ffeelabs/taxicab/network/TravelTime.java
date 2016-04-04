@@ -56,9 +56,6 @@ public class TravelTime {
                         Duration duration = response.routes.get(0).legs.get(0).duration;
                         user.setTravelTime(duration.value);
                         user.setTravelTimeText(duration.text);
-                    } else {
-                        user.setTravelTimeText("-");
-                        user.setTravelTime(Long.MAX_VALUE);
                     }
                     sortedUsers.add(user);
                     if (sortedUsers.size() >= minDrivers) {

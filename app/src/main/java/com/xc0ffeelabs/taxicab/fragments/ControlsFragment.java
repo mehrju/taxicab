@@ -118,8 +118,6 @@ public class ControlsFragment extends Fragment {
         if (!raw && !TextUtils.isEmpty(time) && getContext() != null) {
             String formattedStr = getContext().getString(R.string.appr_time, time);
             mApprTimeText.setText(formattedStr);
-        } else {
-            mApprTimeText.setText("No nearby drivers found");
         }
     }
 
