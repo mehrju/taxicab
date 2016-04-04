@@ -24,7 +24,7 @@ public class Trip extends ParseObject{
     }
 
     public ParseUser getUser() throws ParseException {
-        return getParseUser("user").fetch();
+        return getParseUser("user").fetchIfNeeded();
     }
 
     public void setUser(ParseUser user) {
@@ -49,7 +49,7 @@ public class Trip extends ParseObject{
     }
 
     public ParseUser getDriver() throws ParseException {
-        return getParseUser("driver").fetch();
+        return getParseUser("driver").fetchIfNeeded();
     }
 
     public void setDriver(ParseUser driver) {

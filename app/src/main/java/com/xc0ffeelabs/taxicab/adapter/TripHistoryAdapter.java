@@ -3,6 +3,7 @@ package com.xc0ffeelabs.taxicab.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,11 @@ import java.util.Random;
 
 public class TripHistoryAdapter extends RecyclerView.Adapter<TripHistoryAdapter.ViewHolder> {
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     private List<Trip> mTrips;
     public TripHistoryAdapter(List<Trip> trips) {
         mTrips = trips;
     }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
@@ -70,7 +70,7 @@ public class TripHistoryAdapter extends RecyclerView.Adapter<TripHistoryAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // Get the data model based on position
-        Trip trip = (Trip)mTrips.get(position);
+        Trip trip = mTrips.get(position);
 
         // Set item views based on the data model
         try {
@@ -81,15 +81,15 @@ public class TripHistoryAdapter extends RecyclerView.Adapter<TripHistoryAdapter.
 
         holder.tripDate.setText(new SimpleDateFormat("EEE MMM d, h:mm a").format(trip.getCreatedAt()));
 
-        String picUrl = "https://randomuser.me/api/portraits/med/men/"+ new Random().nextInt(20) + ".jpg"; // 1.jpg
-        holder.tripAmount.setText("$" + new Random().nextInt(20));
+        holder.tripAmount.setText("$" + generateRandom());
 
         try {
-            picUrl = trip.getDriver() != null && trip.getDriver().getString("profileImage") !=null && trip.getDriver().getString("profileImage").length() > 0 ? trip.getDriver().getString("profileImage"):picUrl;
+            String picUrl = trip.getDriver().getString("profileImage");
 
-
-            ImageView userImage = holder.userImage;
-            Picasso.with(userImage.getContext()).load(picUrl).transform(new CircleTransform()).into(userImage);
+            if (!TextUtils.isEmpty(picUrl)) {
+                ImageView userImage = holder.userImage;
+                Picasso.with(userImage.getContext()).load(picUrl).transform(new CircleTransform()).into(userImage);
+            }
 
             String source = trip.getString("pickUpLocationString") != null ? trip.getString("pickUpLocationString") : "1 Facebook Way, Menlo Park, CA";
             String dest = trip.getString("destLocationString") != null ? trip.getString("pickUpLocationString") : "Microsoft SVC Building 1, Mountain View, CA";
@@ -109,7 +109,15 @@ public class TripHistoryAdapter extends RecyclerView.Adapter<TripHistoryAdapter.
     }
 
     public void addItems(List<Trip> items) {
+        mTrips.clear();
         mTrips.addAll(items);
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
+    }
+
+    private int generateRandom() {
+        Random r = new Random();
+        int Low = 10;
+        int High = 50;
+        return r.nextInt(High-Low) + Low;
     }
 }

@@ -26,7 +26,6 @@ import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 import com.xc0ffeelabs.taxicab.R;
-import com.xc0ffeelabs.taxicab.fragments.HistoryFragment;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.receivers.PushNotificationReceiver;
@@ -47,7 +46,6 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     private GoogleMap mMap;
     private GoogleApiClient mApiClient;
     private Drawable mLogo;
-    private boolean onMapFragment = false;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -82,7 +80,6 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
         mapsFragment.setMapReadyListener(this);
         ft.replace(R.id.fm_placeholder, mapsFragment);
         ft.commit();
-        onMapFragment = true;
 
         mapsFragment.setOnTouchListener(new MapsFragment.OnTouchEvent() {
             @Override
@@ -145,37 +142,18 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
             case R.id.nd_logout:
                 logoutUserConf();
                 break;
-            case R.id.map_home:
-                launchMap();
-                break;
             case R.id.history:
                 launchHistory();
                 break;
             default:
                 throw new UnsupportedOperationException("Invalid menu item clicked");
         }
-        item.setChecked(true);
-        setTitle(item.getTitle());
         mDrawer.closeDrawers();
     }
 
-    private void launchMap() {
-        if (!onMapFragment) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            MapsFragment mapsFragment = MapsFragment.newInstance();
-            mapsFragment.setMapReadyListener(this);
-            ft.replace(R.id.fm_placeholder, mapsFragment);
-            ft.commit();
-            onMapFragment = true;
-        }
-    }
-
     private void launchHistory() {
-        onMapFragment = false;
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        HistoryFragment fragment = new HistoryFragment();
-        ft.replace(R.id.fm_placeholder, fragment);
-        ft.commit();
+        Intent intent = new Intent(this, HistoryActivity.class);
+        startActivity(intent);
     }
 
     private void logoutUserConf() {

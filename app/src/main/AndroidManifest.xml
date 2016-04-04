@@ -9,19 +9,22 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
     <permission
         android:name="com.xc0ffeelabs.taxicab.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.xc0ffeelabs.taxicab.permission.C2D_MESSAGE" />
 
     <application
         android:name=".activities.TaxiCabApplication"
         android:allowBackup="true"
+        android:icon="@drawable/ic_chariot_logo_8"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:icon="@drawable/ic_chariot_logo_8"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.TaxiCabMainActivity"
+        <activity
+            android:name=".activities.TaxiCabMainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -30,30 +33,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SignInActivity"
+        <activity
+            android:name=".activities.SignInActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SignUpActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activities.MapsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.MapsActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA6K93u9V37hUZFiT49NLe6UdqhAafro1Y"/>
-
+            android:value="AIzaSyA6K93u9V37hUZFiT49NLe6UdqhAafro1Y" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activities.NoPermissionActivity"
+        <activity
+            android:name=".activities.NoPermissionActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <receiver
-            android:name="com.xc0ffeelabs.taxicab.receivers.PushNotificationReceiver"
+            android:name=".receivers.PushNotificationReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -65,8 +71,7 @@
 
         <meta-data
             android:name="com.parse.push.gcm_sender_id"
-            android:value="id:960181148606">
-        </meta-data>
+            android:value="id:960181148606"></meta-data>
 
         <receiver
             android:name="com.parse.GcmBroadcastReceiver"
@@ -74,36 +79,46 @@
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="com.xc0ffeelabs.taxicab" />
             </intent-filter>
         </receiver>
 
         <service android:name="com.parse.PushService" />
 
-        <receiver android:name="com.xc0ffeelabs.taxicab.receivers.IntentToLaunchMapReceiver"
+        <receiver
+            android:name=".receivers.IntentToLaunchMapReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.xc0ffeelabs.taxicabdriver.INTENT_TO_LAUNCH_MAP" />
+
                 <category android:name="com.xc0ffeelabs.taxicab" />
             </intent-filter>
         </receiver>
-
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.facebook.sdk.PERMISSIONS"
             android:value="email" />
 
+        <activity android:name=".activities.HistoryActivity"
+            android:parentActivityName=".activities.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MapsActivity" />
+        </activity>
     </application>
 
 </manifest>
