@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +28,7 @@ import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 import com.xc0ffeelabs.taxicab.R;
 import com.xc0ffeelabs.taxicab.fragments.MapsFragment;
+import com.xc0ffeelabs.taxicab.fragments.NotificationDialog;
 import com.xc0ffeelabs.taxicab.models.User;
 import com.xc0ffeelabs.taxicab.receivers.PushNotificationReceiver;
 import com.xc0ffeelabs.taxicab.states.StateManager;
@@ -50,10 +52,16 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            TaxiCabApplication.getStateManager().startDefaultState();
-            Intent mapsIntent = new Intent(context, MapsActivity.class);
-            mapsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(mapsIntent);
+            String type = intent.getStringExtra("notiftype");
+            if ("popup".equals(type)) {
+                //show pupup message
+                showRequestNotificationFragment(intent);
+            } else {
+                TaxiCabApplication.getStateManager().startDefaultState();
+                Intent mapsIntent = new Intent(context, MapsActivity.class);
+                mapsIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(mapsIntent);
+            }
         }
     };
 
@@ -173,6 +181,16 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
                     }
                 })
                 .create().show();
+    }
+
+    private void showRequestNotificationFragment(Intent intent) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        String tripId = intent.getStringExtra("tripId");
+        String driverId = intent.getStringExtra("driverId");
+        String actionType = intent.getStringExtra("actionType");
+        NotificationDialog rideRequest = NotificationDialog.newInstance(driverId, tripId, actionType);
+        rideRequest.show(fm, "fragment_edit_name");
     }
 
     @Override

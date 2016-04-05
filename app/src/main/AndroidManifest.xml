@@ -85,6 +85,7 @@
         </receiver>
 
         <service android:name="com.parse.PushService" />
+        <service android:name=".services.CreateNotification" />
 
         <receiver
             android:name=".receivers.IntentToLaunchMapReceiver"
