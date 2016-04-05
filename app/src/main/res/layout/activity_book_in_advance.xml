@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.xc0ffeelabs.taxicab.activities.BookInAdvanceActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@android:color/black"
+        android:title="Reserve a ride"
+        app:title="Reserve a ride"
+        android:background="?attr/colorPrimary">
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_below="@id/toolbar"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/topControls">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_border"
+            android:id="@+id/layout_src"
+            android:padding="1dp">
+
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:text="A"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/white"
+                    android:background="@drawable/cirular_bg"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="15dp"
+                    android:background="@color/colorAccent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true">
+                </View>
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/et_source"
+                android:hint="Pickup location"
+                style="@style/EditTextStyle"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-light"
+                android:editable="false"
+                android:focusable="false"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_border"
+            android:id="@+id/layout_dest"
+            android:layout_below="@id/layout_src"
+            android:padding="1dp">
+
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="15dp"
+                    android:background="@color/colorAccent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:text="B"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/white"
+                    android:background="@drawable/cirular_bg"/>
+            </RelativeLayout>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/et_dst"
+                android:hint="Destination"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-light"
+                style="@style/EditTextStyle"
+                android:editable="false"
+                android:focusable="false"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_border"
+            android:layout_below="@id/layout_dest"
+            android:id="@+id/ll_date"
+            android:padding="1dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_date"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/et_date_picker"
+                android:inputType="date"
+                android:hint="Select date"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-light"
+                style="@style/EditTextStyle"
+                android:editable="false"
+                android:focusable="false"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/edittext_border"
+            android:layout_below="@id/ll_date"
+            android:id="@+id/ll_time"
+            android:padding="1dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_time"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/et_date_time"
+                android:inputType="date"
+                android:hint="Select time"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-light"
+                style="@style/EditTextStyle"
+                android:focusable="false"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Reserve"
+        android:layout_below="@id/topControls"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_button"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/white"
+        android:id="@+id/btn_reserve"/>
+
+</RelativeLayout>

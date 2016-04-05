@@ -71,7 +71,7 @@
 
         <meta-data
             android:name="com.parse.push.gcm_sender_id"
-            android:value="id:960181148606"></meta-data>
+            android:value="id:960181148606" />
 
         <receiver
             android:name="com.parse.GcmBroadcastReceiver"
@@ -114,12 +114,14 @@
             android:name="com.facebook.sdk.PERMISSIONS"
             android:value="email" />
 
-        <activity android:name=".activities.HistoryActivity"
+        <activity
+            android:name=".activities.HistoryActivity"
             android:parentActivityName=".activities.MapsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MapsActivity" />
         </activity>
+        <activity android:name=".activities.BookInAdvanceActivity"></activity>
     </application>
 
 </manifest>

@@ -153,10 +153,46 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
             case R.id.history:
                 launchHistory();
                 break;
+            case R.id.trip_estimate:
+                launchFareEstimate();
+                break;
+            case R.id.profile:
+                launchProfileView();
+                break;
+            case R.id.book_in_advance:
+                launchAdvanceBooking();
+                break;
             default:
                 throw new UnsupportedOperationException("Invalid menu item clicked");
         }
         mDrawer.closeDrawers();
+    }
+
+    private void launchAdvanceBooking() {
+        Intent intent = new Intent(this, BookInAdvanceActivity.class);
+        startActivity(intent);
+    }
+
+    private void launchProfileView() {
+            new AlertDialog.Builder(this).setTitle("Check back later.")
+                    .setMessage("Profile view is not yet enabled. Stay tuned!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).create().show();
+    }
+
+    private void launchFareEstimate() {
+        new AlertDialog.Builder(this).setTitle("Check back later.")
+                .setMessage("This functionality is not yet enabled. Stay tuned!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
     }
 
     private void launchHistory() {
