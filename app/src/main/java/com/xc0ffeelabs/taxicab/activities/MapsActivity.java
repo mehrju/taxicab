@@ -270,6 +270,7 @@ public class MapsActivity extends AppCompatActivity implements MapsFragment.MapR
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        StateManager.getInstance().resetCurrentState();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
