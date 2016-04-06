@@ -1,13 +1,11 @@
 package com.xc0ffeelabs.taxicab.states;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -66,7 +64,7 @@ public class EnrouteToDstState implements State {
     private GoogleMap mMap;
     private EnrouteToDstData mEnrouteData;
     private LatLng mUserLocation;
-    private Marker mUserMarker;
+    private Marker mDstMarker;
     private static EnrouteToDstState mTaxiEnroute;
     private boolean mRefreshRequested;
     private LatLng mDriverLocation;
@@ -108,8 +106,10 @@ public class EnrouteToDstState implements State {
         User user = (User) ParseUser.getCurrentUser();
         try {
             Location destLocation = user.getDestLocation();
-            destLocation.fetchIfNeeded();
-            mDest = new LatLng(destLocation.getLatitude(), destLocation.getLongitude());
+            if (destLocation != null) {
+                destLocation.fetchIfNeeded();
+                mDest = new LatLng(destLocation.getLatitude(), destLocation.getLongitude());
+            }
             addUserMarker();
         } catch (Exception e) {
             Log.e("NAYAN", "Failed to get latest info!");
@@ -154,17 +154,6 @@ public class EnrouteToDstState implements State {
         updateDriverLocation();
     }
 
-    private void showDriverReached() {
-        new AlertDialog.Builder(mActivity)
-                .setTitle(R.string.dst_arrived)
-                .setMessage(R.string.dst_arrived_msg)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                }).create().show();
-    }
-
     private void updateDriverLocation() {
         mRefreshRequested = true;
         mHandler.sendEmptyMessage(MSG_REFRESH_LOCATION);
@@ -192,20 +181,20 @@ public class EnrouteToDstState implements State {
     }
 
     private void addUserMarker() {
-        if (mUserMarker == null) {
+        if (mDstMarker == null) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(mDest)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_green))
                     .title("Destination");
-            mUserMarker = mMap.addMarker(markerOptions);
+            mDstMarker = mMap.addMarker(markerOptions);
         } else {
-            mUserMarker.setPosition(mUserLocation);
+            mDstMarker.setPosition(mDest);
         }
     }
 
     @Override
     public void exitState() {
-        if (mUserMarker != null) mUserMarker.remove();
+        if (mDstMarker != null) mDstMarker.remove();
         if (mLine != null) mLine.remove();
     }
 

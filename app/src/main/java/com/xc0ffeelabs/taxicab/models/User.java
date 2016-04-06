@@ -8,6 +8,8 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONObject;
+
 @ParseClassName("_User")
 public class User extends ParseUser {
 
@@ -150,17 +152,25 @@ public class User extends ParseUser {
     }
 
     public void setDestLocation(LatLng location, String text) {
-        Location pnt = new Location();
-        pnt.setLatitude(location.latitude);
-        pnt.setLongitude(location.longitude);
-        if (!TextUtils.isEmpty(text)) {
-            pnt.setText(text);
+        if (location == null) {
+            put(DEST_LOCATION, JSONObject.NULL);
+        } else {
+            Location pnt = new Location();
+            pnt.setLatitude(location.latitude);
+            pnt.setLongitude(location.longitude);
+            if (!TextUtils.isEmpty(text)) {
+                pnt.setText(text);
+            }
+            put(DEST_LOCATION, pnt);
         }
-        put(DEST_LOCATION, pnt);
         saveInBackground();
     }
 
     public Location getDestLocation() {
+        Object dest = get(DEST_LOCATION);
+        if (dest == null) {
+            return null;
+        }
         return (Location) get(DEST_LOCATION);
     }
 

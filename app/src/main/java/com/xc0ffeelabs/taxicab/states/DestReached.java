@@ -47,6 +47,7 @@ public class DestReached implements State{
     private void endTrip() {
         User user = (User) ParseUser.getCurrentUser();
         user.setUserState(User.UserStates.Online);
+        user.setDestLocation(null, null);
         user.saveInBackground();
         StateManager.getInstance().startState(StateManager.States.ListDriver, null);
     }
